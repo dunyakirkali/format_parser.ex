@@ -3,44 +3,54 @@ defmodule FormatParserTest do
   doctest FormatParser
 
   test "jpeg" do
-    {:ok, file} = File.read("test/fixtures/JPEG_example_JPG_RIP_050.jpg")
+    {:ok, file} = File.read("priv/test.jpg")
 
-    assert FormatParser.parse(file).format == :jpeg
+    assert FormatParser.parse(file).format == :jpg
     assert FormatParser.parse(file).nature == :image
   end
 
   test "cr2" do
-    {:ok, file} = File.read("test/fixtures/RAW_CANON_5D_ARGB.CR2")
+    {:ok, file} = File.read("priv/test.cr2")
 
     assert FormatParser.parse(file).format == :cr2
     assert FormatParser.parse(file).nature == :image
   end
 
   test "ico" do
-    {:ok, file} = File.read("test/fixtures/Sora-Meliae-Matrilineare-Mimes-image-x-ico.ico")
+    {:ok, file} = File.read("priv/test.ico")
 
     assert FormatParser.parse(file).format == :ico
     assert FormatParser.parse(file).nature == :image
   end
 
   test "rtf" do
-    {:ok, file} = File.read("test/fixtures/rich_text.rtf")
+    {:ok, file} = File.read("priv/test.rtf")
 
     assert FormatParser.parse(file).format == :rtf
-    assert FormatParser.parse(file).nature == :text
+    assert FormatParser.parse(file).nature == :document
   end
 
   test "tif" do
-    {:ok, file} = File.read("test/fixtures/CCITT_8.TIF")
+    {:ok, file} = File.read("priv/test.tif")
 
     assert FormatParser.parse(file).format == :tif
     assert FormatParser.parse(file).nature == :image
   end
 
   test "bmp" do
-    {:ok, file} = File.read("test/fixtures/FLAG_B24.bmp")
+    {:ok, file} = File.read("priv/test.bmp")
 
     assert FormatParser.parse(file).format == :bmp
     assert FormatParser.parse(file).nature == :image
+  end
+
+  test "png" do
+    {:ok, file} = File.read("priv/test.png")
+
+    assert FormatParser.parse(file).format == :png
+    assert FormatParser.parse(file).nature == :image
+    assert FormatParser.parse(file).width_px == 300
+    assert FormatParser.parse(file).height_px == 300
+    assert FormatParser.parse(file).orientation == nil
   end
 end
