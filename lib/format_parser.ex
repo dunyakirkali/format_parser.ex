@@ -17,18 +17,14 @@ defmodule FormatParser do
   end
 
   defp parse_jpeg(binary) do
-    # IO.inspect binary
     %Image{nature: :image, format: :jpg, width_px: 0, height_px: 0, orientation: :top_left}
   end
 
   defp parse_bmp(binary) do
-    # IO.inspect binary
-    # IO.inspect binary[12]
     %Image{nature: :image, format: :bmp, width_px: 0, height_px: 0, orientation: :top_left}
   end
 
-  defp parse_png(binary) do
-    << _length :: size(32), "IHDR", width :: size(32), height :: size(32), bit_depth, color_type, compression_method, filter_method, interlace_method, _crc :: size(32), chunks :: binary>> = binary
+  defp parse_png(<< _length :: size(32), "IHDR", width :: size(32), height :: size(32), bit_depth, color_type, compression_method, filter_method, interlace_method, _crc :: size(32), chunks :: binary>>) do
     %Image{nature: :image, format: :png, width_px: width, height_px: height, orientation: nil}
   end
 end
