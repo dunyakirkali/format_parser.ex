@@ -1,6 +1,7 @@
 defmodule FormatParser do
   alias FormatParser.Image
   alias FormatParser.Video
+  alias FormatParser.Document
 
   def parse(file) do
     case file do
@@ -14,7 +15,7 @@ defmodule FormatParser do
       <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, x :: binary>> -> %Image{format: :cr2}
       <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> %Image{format: :tif}
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> %Image{format: :ico}
-      <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> %Image{nature: :document, format: :rtf}
+      <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> %Document{format: :rtf}
       <<0x4D, 0x4D, 0x00, 0x2A, x :: binary>> -> :tiff
       <<0x80, 0x2A, 0x5F, 0xD7, x :: binary>> -> :cin
       
