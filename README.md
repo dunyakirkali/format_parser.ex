@@ -11,7 +11,6 @@ match.nature        #=> :image
 match.format        #=> :jpg
 match.width_px      #=> 320
 match.height_px     #=> 240
-match.orientation   #=> :top_left
 ```
 
 ## Installation

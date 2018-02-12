@@ -7,8 +7,8 @@ defmodule FormatParser do
       <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, x :: binary>> -> parse_png(x)
       <<"BM", x :: binary>> -> parse_bmp(x)
       <<"GIF89a", x :: binary>> -> parse_gif(x)
-      <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       
+      <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
       <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, x :: binary>> -> %Image{format: :cr2}
