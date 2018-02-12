@@ -7,6 +7,17 @@ defmodule FormatParserTest do
 
     assert FormatParser.parse(file).format == :jpg
     assert FormatParser.parse(file).nature == :image
+    # assert FormatParser.parse(file).width_px == 313
+    # assert FormatParser.parse(file).height_px == 234
+  end
+  
+  test "gif" do
+    {:ok, file} = File.read("priv/test.gif")
+
+    assert FormatParser.parse(file).format == :gif
+    assert FormatParser.parse(file).nature == :image
+    assert FormatParser.parse(file).width_px == 600
+    assert FormatParser.parse(file).height_px == 600
   end
 
   test "cr2" do
@@ -14,6 +25,8 @@ defmodule FormatParserTest do
 
     assert FormatParser.parse(file).format == :cr2
     assert FormatParser.parse(file).nature == :image
+    # assert FormatParser.parse(file).width_px == 4368
+    # assert FormatParser.parse(file).height_px == 2912
   end
 
   test "ico" do
@@ -21,6 +34,8 @@ defmodule FormatParserTest do
 
     assert FormatParser.parse(file).format == :ico
     assert FormatParser.parse(file).nature == :image
+    # assert FormatParser.parse(file).width_px == 256
+    # assert FormatParser.parse(file).height_px == 256
   end
 
   test "rtf" do
@@ -35,6 +50,8 @@ defmodule FormatParserTest do
 
     assert FormatParser.parse(file).format == :tif
     assert FormatParser.parse(file).nature == :image
+    # assert FormatParser.parse(file).width_px == 1728
+    # assert FormatParser.parse(file).height_px == 2376
   end
 
   test "bmp" do
@@ -42,6 +59,8 @@ defmodule FormatParserTest do
 
     assert FormatParser.parse(file).format == :bmp
     assert FormatParser.parse(file).nature == :image
+    assert FormatParser.parse(file).width_px == 124
+    assert FormatParser.parse(file).height_px == 124
   end
 
   test "png" do
@@ -51,6 +70,14 @@ defmodule FormatParserTest do
     assert FormatParser.parse(file).nature == :image
     assert FormatParser.parse(file).width_px == 300
     assert FormatParser.parse(file).height_px == 300
-    assert FormatParser.parse(file).orientation == nil
+  end
+  
+  test "flv" do
+    {:ok, file} = File.read("priv/test.flv")
+
+    assert FormatParser.parse(file).format == :flv
+    assert FormatParser.parse(file).nature == :video
+    # assert FormatParser.parse(file).width_px == 360
+    # assert FormatParser.parse(file).height_px == 288
   end
 end
