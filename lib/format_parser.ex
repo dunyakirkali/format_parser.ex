@@ -6,7 +6,7 @@ defmodule FormatParser do
       <<255, 216, 255, x :: binary>> -> parse_jpeg(x)
       <<73, 73, 42, 0, 16, 0, 0, 0, 67, 82, x :: binary>> -> %Image{nature: :image, format: :cr2}
       <<73, 73, 42, 0, x :: binary>> -> %Image{nature: :image, format: :tif}
-      <<0, 0, 1, 0, x :: binary>> -> %Image{nature: :image, format: :ico}
+      <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> %Image{nature: :image, format: :ico}
       <<123, 92, 114, 116, 102, 49, x :: binary>> -> %Image{nature: :document, format: :rtf}
       <<66, 77, x :: binary>> -> parse_bmp(x)
       <<77, 77, 0, 42, x :: binary>> -> :tiff
