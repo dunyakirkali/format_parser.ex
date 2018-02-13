@@ -87,4 +87,11 @@ defmodule FormatParserTest do
     assert FormatParser.parse(file).format == :aiff
     assert FormatParser.parse(file).nature == :audio
   end
+  
+  test "aif" do
+    {:ok, file} = File.read("priv/test.aif")
+
+    assert FormatParser.parse(file).format == :aiff
+    assert FormatParser.parse(file).nature == :audio
+  end
 end
