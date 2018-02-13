@@ -25,7 +25,7 @@ defmodule FormatParser do
     end
   end
   
-  def parse_aiff(x) do
+  def parse_aiff(<<_ :: size(56), "COMM", x :: binary>>) do
     %Audio{format: :aiff}
   end
   
