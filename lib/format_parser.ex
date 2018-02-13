@@ -2,12 +2,14 @@ defmodule FormatParser do
   alias FormatParser.Image
   alias FormatParser.Video
   alias FormatParser.Document
+  alias FormatParser.Audio
 
   def parse(file) do
     case file do
       <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, x :: binary>> -> parse_png(x)
       <<"BM", x :: binary>> -> parse_bmp(x)
       <<"GIF89a", x :: binary>> -> parse_gif(x)
+      <<"FORM", 0x00, x :: binary>> -> parse_aiff(x)
       
       <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       <<"GIF87a", x :: binary>> -> parse_gif(x)
@@ -21,6 +23,10 @@ defmodule FormatParser do
       
       true -> {:error, "Unknown"}
     end
+  end
+  
+  def parse_aiff(x) do
+    %Audio{format: :aiff}
   end
   
   def parse_flv(x) do
