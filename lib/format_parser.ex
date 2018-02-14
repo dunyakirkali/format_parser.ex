@@ -24,39 +24,39 @@ defmodule FormatParser do
     end
   end
   
-  def parse_rtf(<<x :: binary>>) do
+  defp parse_rtf(<<_x :: binary>>) do
     %Document{format: :rtf}
   end
   
-  def parse_ico(<<_x:: binary>>) do
+  defp parse_ico(<<_x:: binary>>) do
     %Image{format: :ico}
   end
   
-  def parse_tif(<<_x:: binary>>) do
+  defp parse_tif(<<_x:: binary>>) do
     %Image{format: :tif}
   end
   
-  def parse_cr2(<<_x:: binary>>) do
+  defp parse_cr2(<<_x:: binary>>) do
     %Image{format: :cr2}
   end
   
-  def parse_flac(<<_x:: binary>>) do
+  defp parse_flac(<<_x:: binary>>) do
     %Audio{format: :flac}
   end
   
-  def parse_ogg(<<_x:: binary>>) do
+  defp parse_ogg(<<_x:: binary>>) do
     %Audio{format: :ogg}
   end
   
-  def parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), _x :: binary>>) do
+  defp parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), _x :: binary>>) do
     %Audio{format: :wav, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
   end
   
-  def parse_aiff(<<_ :: size(56), "COMM", _ :: size(96), sample_rate_hz :: size(80), _x :: binary>>) do
+  defp parse_aiff(<<_ :: size(56), "COMM", _ :: size(96), sample_rate_hz :: size(80), _x :: binary>>) do
     %Audio{format: :aiff, sample_rate_hz: sample_rate_hz}
   end
   
-  def parse_flv(_x) do
+  defp parse_flv(_x) do
     %Video{format: :flv}
   end
   
