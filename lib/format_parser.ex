@@ -9,8 +9,10 @@ defmodule FormatParser do
       <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, x :: binary>> -> parse_png(x)
       <<"BM", x :: binary>> -> parse_bmp(x)
       <<"GIF89a", x :: binary>> -> parse_gif(x)
+      <<"RIFF", x :: binary>> -> parse_wav(x)
+      <<"OggS", x :: binary>> -> parse_ogg(x)
       <<"FORM", 0x00, x :: binary>> -> parse_aiff(x)
-      
+
       <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
@@ -25,8 +27,16 @@ defmodule FormatParser do
     end
   end
   
-  def parse_aiff(<<_ :: size(56), "COMM", x :: binary>>) do
-    %Audio{format: :aiff}
+  def parse_ogg(<<x:: binary>>) do
+    %Audio{format: :ogg, sample_rate_hz: -1, num_audio_channels: -1}
+  end
+  
+  def parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), x :: binary>>) do
+    %Audio{format: :wav, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
+  end
+  
+  def parse_aiff(<<_ :: size(56), "COMM", _ :: size(96), sample_rate_hz :: size(80), x :: binary>>) do
+    %Audio{format: :aiff, sample_rate_hz: sample_rate_hz}
   end
   
   def parse_flv(x) do
