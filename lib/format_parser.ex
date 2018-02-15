@@ -3,6 +3,7 @@ defmodule FormatParser do
   alias FormatParser.Video
   alias FormatParser.Document
   alias FormatParser.Audio
+  alias FormatParser.Font
 
   def parse(file) do
     case file do
@@ -20,8 +21,20 @@ defmodule FormatParser do
       <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
+      <<0x00, 0x01, 0x00, 0x00, 0x00, x :: binary>> -> parse_ttf(x)
+      <<"true", 0x00, x :: binary>> -> parse_ttf(x)
+      <<"OTTO", 0x00, x :: binary>> -> parse_otf(x)
       _ -> {:error, "Unknown"}
     end
+  end
+  
+  defp parse_otf(<<_x :: binary>>) do
+    %Font{format: :otf}
+  end
+  
+  defp parse_ttf(<<_x :: binary>>) do
+    IO.inspect "TTF"
+    %Font{format: :ttf}
   end
   
   defp parse_rtf(<<_x :: binary>>) do
