@@ -36,6 +36,12 @@ match = FormatParser.parse(file)
 match.nature        #=> :audio
 match.format        #=> :wav
 
+# Font
+{:ok, file} = File.read("myfont.ttf")
+match = FormatParser.parse(file)
+match.nature        #=> :font
+match.format        #=> :ttf
+
 ```
 
 ## Supported Formats
@@ -64,6 +70,11 @@ match.format        #=> :wav
 - tif
 - bmp
 - png
+
+### Font
+
+- ttf
+- otf
 
 ## Installation
 
