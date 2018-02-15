@@ -5,18 +5,65 @@
 [![Hex.pm version](https://img.shields.io/hexpm/v/format_parser.svg?style=flat-square)](https://hex.pm/packages/format_parser)
 [![Hex.pm downloads](https://img.shields.io/hexpm/dt/format_parser.svg)](https://hex.pm/packages/format_parser)
 
-**TODO: Add description**
+Can be used to figure out the file type and format.
+
+Inspired heavily by [format_parser](https://github.com/WeTransfer/format_parser/).
 
 ## Basic usage
 
 ```elixir
+# Image
 {:ok, file} = File.read("myimage.jpg")
 match = FormatParser.parse(file)
 match.nature        #=> :image
 match.format        #=> :jpg
-match.width_px      #=> 320
-match.height_px     #=> 240
+
+# Video
+{:ok, file} = File.read("myvideo.flv")
+match = FormatParser.parse(file)
+match.nature        #=> :video
+match.format        #=> :flv
+
+# Document
+{:ok, file} = File.read("mydocument.rtf")
+match = FormatParser.parse(file)
+match.nature        #=> :document
+match.format        #=> :rtf
+
+# Audio
+{:ok, file} = File.read("myaudio.wav")
+match = FormatParser.parse(file)
+match.nature        #=> :audio
+match.format        #=> :wav
+
 ```
+
+## Supported Formats
+
+### Audio
+
+- aiff
+- wav
+- ogg
+- flac
+
+### Video
+
+- flv
+
+### Document
+
+- rtf
+
+### Image
+
+- jpg
+- gif
+- cr2
+- ico
+- tif
+- bmp
+- png
 
 ## Installation
 
