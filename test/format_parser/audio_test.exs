@@ -36,4 +36,13 @@ defmodule FormatParser.AudioTest do
     # assert FormatParser.parse(file).sample_rate_hz == 48_000
     # assert FormatParser.parse(file).num_audio_channels == 2
   end
+  
+  test "mp3" do
+    {:ok, file} = File.read("priv/test.mp3")
+
+    assert FormatParser.parse(file).format == :mp3
+    assert FormatParser.parse(file).nature == :audio
+    # assert FormatParser.parse(file).sample_rate_hz == 48_000
+    # assert FormatParser.parse(file).num_audio_channels == 2
+  end
 end

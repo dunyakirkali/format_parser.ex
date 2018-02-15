@@ -24,8 +24,13 @@ defmodule FormatParser do
       <<0x00, 0x01, 0x00, 0x00, 0x00, x :: binary>> -> parse_ttf(x)
       <<"true", 0x00, x :: binary>> -> parse_ttf(x)
       <<"OTTO", 0x00, x :: binary>> -> parse_otf(x)
+      <<"ID3", x :: binary>> -> parse_mp3(x)
       _ -> {:error, "Unknown"}
     end
+  end
+  
+  defp parse_mp3(<<_x :: binary>>) do
+    %Audio{format: :mp3}
   end
   
   defp parse_otf(<<_x :: binary>>) do
