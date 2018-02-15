@@ -25,7 +25,8 @@ defmodule FormatParser.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:excoveralls, "~> 0.8.1", only: :test}
+      {:excoveralls, "~> 0.8.1", only: :test},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
   
