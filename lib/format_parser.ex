@@ -33,7 +33,6 @@ defmodule FormatParser do
   end
   
   defp parse_ttf(<<_x :: binary>>) do
-    IO.inspect "TTF"
     %Font{format: :ttf}
   end
   
