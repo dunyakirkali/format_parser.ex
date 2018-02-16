@@ -48,35 +48,43 @@ match.format        #=> :ttf
 
 ### Audio
 
-- aiff
-- wav
-- ogg
-- flac
+| Type  | Nature | Format | Sample Rate | # of Channels |
+| :---: | :----: | :----: | :---------: | :-----------: |
+| aiff  | x      | x      |             |               |
+| wav   | x      | x      | x           | x             |
+| ogg   | x      | x      |             |               |
+| flac  | x      | x      |             |               |
 
 ### Video
 
-- flv
+| Type | Nature | Format | 
+| :--: | :----: | :----: |
+| flv  | x      | x      |
 
 ### Document
 
-- rtf
+| Type | Nature | Format | 
+| :--: | :----: | :----: |
+| rtf  | x      | x      |
 
 ### Image
 
-- jpg
-- gif
-- cr2
-- ico
-- tif
-- bmp
-- png
+| Type | Nature | Format | Width | Height |
+| :--: | :----: | :----: | :---: | :----: |
+| jpg  | x      | x      |       |        |
+| gif  | x      | x      | x     | x      |
+| cr2  | x      | x      |       |        |
+| ico  | x      | x      |       |        |
+| tif  | x      | x      |       |        |
+| bmp  | x      | x      | x     | x      |
+| png  | x      | x      | x     | x      |
 
 ### Font
 
-| Type | nature | format | 
-| ---- | ------ | ------ |
-| ttf  |    x   |    x   |
-| otf  |    x   |    x   |
+| Type | Nature | Format | 
+| :--: | :----: | :----: |
+| ttf  | x      | x      |
+| otf  | x      | x      |
 
 ## Installation
 
