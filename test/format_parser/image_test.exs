@@ -63,4 +63,11 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).width_px == 300
     assert FormatParser.parse(file).height_px == 300
   end
+  
+  test "psd" do
+    {:ok, file} = File.read("priv/test.psd")
+
+    assert FormatParser.parse(file).format == :psd
+    assert FormatParser.parse(file).nature == :image
+  end
 end

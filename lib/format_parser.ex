@@ -25,8 +25,13 @@ defmodule FormatParser do
       <<"true", 0x00, x :: binary>> -> parse_ttf(x)
       <<"OTTO", 0x00, x :: binary>> -> parse_otf(x)
       <<"ID3", x :: binary>> -> parse_mp3(x)
+      <<"8BPS", x :: binary>> -> parse_psd(x)
       _ -> {:error, "Unknown"}
     end
+  end
+  
+  defp parse_psd(<<_x :: binary>>) do
+    %Image{format: :psd}
   end
   
   defp parse_mp3(<<_x :: binary>>) do
