@@ -55,9 +55,27 @@ defmodule FormatParser do
   end
 
   defp parse_tif(<< ifd_offset  :: little-integer-size(32), _x :: binary >>, file) do
+    offset = ifd_offset * 8
+    << header :: size(offset), size :: little-integer-size(16), _rest :: binary >> = file
+    ifds_size = size * 8 * 12
+
+    << ifd_set :: size(ifds_size), _drest :: binary >> = _rest
+    for << chunk::size(96) <- << ifd_set :: size(ifds_size) >> >> do
+      <<
+      tag :: little-integer-size(16),
+      type :: little-integer-size(16),
+      length :: little-integer-size(32),
+      value :: little-integer-size(32),
+      _rest :: binary
+      >> = <<chunk::size(96)>>
+
+    end
+    # parse_ifd(ifd_set, size)
     %Image{format: :tif}
   end
-  
+
+  defp parse_ifd(ifd_set, size) do
+  end
   defp parse_cr2(<<_x:: binary>>) do
     %Image{format: :cr2}
   end
