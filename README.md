@@ -57,13 +57,13 @@ match.format        #=> :ttf
 
 ### Video
 
-| Type | Nature | Format | 
+| Type | Nature | Format |
 | :--: | :----: | :----: |
 | flv  | x      | x      |
 
 ### Document
 
-| Type | Nature | Format | 
+| Type | Nature | Format |
 | :--: | :----: | :----: |
 | rtf  | x      | x      |
 
@@ -82,10 +82,11 @@ match.format        #=> :ttf
 
 ### Font
 
-| Type | Nature | Format | 
+| Type | Nature | Format |
 | :--: | :----: | :----: |
 | ttf  | x      | x      |
 | otf  | x      | x      |
+| fon  | x      | x      |
 
 ## Installation
 
