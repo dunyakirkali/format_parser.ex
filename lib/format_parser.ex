@@ -59,13 +59,12 @@ defmodule FormatParser do
     << header :: size(offset), size :: little-integer-size(16), _rest :: binary >> = file
     ifds_size = size * 8 * 12
     << ifd_set :: size(ifds_size), _drest :: binary >> = _rest
-    parse_ifd(<< ifd_set :: size(ifds_size) >>, size)
+    width = parse_ifd(<< ifd_set :: size(ifds_size) >>, 256)
+    height = parse_ifd(<< ifd_set :: size(ifds_size) >>, 256)
     %Image{format: :tif}
   end
 
-  defp parse_ifd( << ifd_set :: binary >>, ifds_size) do
-    width = 0;
-    height = 0;
+  defp parse_ifd( << ifd_set :: binary >>, searched_tag) do
     for << chunk::size(96) <- << ifd_set :: binary >> >> do
       <<
       tag :: little-integer-size(16),
@@ -74,9 +73,7 @@ defmodule FormatParser do
       value :: little-integer-size(32),
       _rest :: binary
       >> = <<chunk::size(96)>>
-
-      if tag == 256, do: width = value
-      if tag == 257, do: height = value
+      if tag == searched_tag, do: value, else: 0
     end
   end
 
