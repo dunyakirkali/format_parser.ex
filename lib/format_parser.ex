@@ -18,7 +18,7 @@ defmodule FormatParser do
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
       <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, x :: binary>> -> parse_cr2(x)
-      <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x)
+      <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x, file)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
       <<0x00, 0x01, 0x00, 0x00, 0x00, x :: binary>> -> parse_ttf(x)
@@ -53,8 +53,8 @@ defmodule FormatParser do
   defp parse_ico(<<_x:: binary>>) do
     %Image{format: :ico}
   end
-  
-  defp parse_tif(<<_x:: binary>>) do
+
+  defp parse_tif(<< ifd_offset  :: little-integer-size(32), _x :: binary >>, file) do
     %Image{format: :tif}
   end
   
