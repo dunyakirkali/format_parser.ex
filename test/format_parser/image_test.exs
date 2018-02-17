@@ -28,6 +28,15 @@ defmodule FormatParser.ImageTest do
     # assert FormatParser.parse(file).height_px == 2912
   end
 
+  test "nef" do
+    {:ok, file} = File.read("priv/test.nef")
+
+    assert FormatParser.parse(file).format == :tif
+    assert FormatParser.parse(file).nature == :image
+    # assert FormatParser.parse(file).width_px == 4368
+    # assert FormatParser.parse(file).height_px == 2912
+  end
+
   test "ico" do
     {:ok, file} = File.read("priv/test.ico")
 
