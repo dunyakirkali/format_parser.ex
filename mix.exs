@@ -4,7 +4,7 @@ defmodule FormatParser.Mixfile do
   def project do
     [
       app: :format_parser,
-      version: "0.3.0",
+      version: "0.4.0",
       elixir: "~> 1.3",
       start_permanent: Mix.env == :prod,
       deps: deps(),
@@ -29,7 +29,7 @@ defmodule FormatParser.Mixfile do
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
-  
+
   # Package Information
   defp package do
     [
