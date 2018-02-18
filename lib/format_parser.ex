@@ -74,7 +74,7 @@ defmodule FormatParser do
     %Image{format: :ico}
   end
 
-  defp parse_tif(<< ifd_offset  :: little-integer-size(32), _x :: binary >>) do
+  defp parse_tif(<< ifd_offset :: little-integer-size(32), _x :: binary >>) do
     offset = (ifd_offset - 8) * 8
     ifd_set = parse_ifd(<< _x :: binary >>, offset)
 
@@ -91,26 +91,26 @@ defmodule FormatParser do
 
   defp parse_ifd(<< _x :: binary >>, offset) do
     <<
-      _head :: size(offset), size :: little-integer-size(16),
+      _head :: size(offset), _size :: little-integer-size(16),
       ifd_1st :: size(96), ifd_2nd :: size(96), ifd_3rd :: size(96),
-      _chunk :: size(288), ifd_make :: size(96),  _rest :: binary
+      _chunk :: size(288), ifd_make :: size(96), _rest :: binary
     >> = << _x :: binary >>
 
     Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_make], fn(x) ->
       case ifd_tag(<< x :: size(96) >>) do
-        {271, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: parse_string(<< _x ::binary >>, (ifd[:value] - 8) * 8, ifd[:length]  * 8)}
+        {271, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: parse_string(<< _x ::binary >>, (ifd[:value] - 8) * 8, ifd[:length] * 8)}
         {_, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: ifd[:value]}
       end
     end)
   end
 
-  defp ifd_tag(<< tag :: little-integer-size(16), type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
+  defp ifd_tag(<< tag :: little-integer-size(16), _type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
     {tag, %{tag: tag, length: length, value: value}}
   end
 
-  defp parse_string(<< _x ::binary >>, offset, length) do
-    << _ :: size(offset), string :: size(length), _ :: binary >> = << _x :: binary >>
-    << string :: size(length)  >> |> String.downcase
+  defp parse_string(<< x ::binary >>, offset, length) do
+    << _ :: size(offset), string :: size(length), _ :: binary >> = << x :: binary >>
+    << string :: size(length) >> |> String.downcase
   end
 
   defp parse_cr2(<<_x:: binary>>) do
