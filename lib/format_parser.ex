@@ -89,13 +89,13 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_ifd(<< _x :: binary >>, offset) do
+  defp parse_ifd(<< x :: binary >>, offset) do
     head_size = offset + 16
-    << _head :: size(head_size), ifd_1st :: size(96), ifd_2nd :: size(96), ifd_3rd :: size(96), _chunk :: size(288), ifd_make :: size(96), _rest :: binary >> = _x
+    << _head :: size(head_size), ifd_1st :: size(96), ifd_2nd :: size(96), ifd_3rd :: size(96), _chunk :: size(288), ifd_make :: size(96), _rest :: binary >> = x
     
-    Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_make], fn(x) ->
-      case ifd_tag(<< x :: size(96) >>) do
-        {271, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: parse_string(_x, (ifd[:value] - 8) * 8, ifd[:length] * 8)}
+    Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_make], fn(ifd) ->
+      case ifd_tag(<< ifd :: size(96) >>) do
+        {271, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: parse_string(x, (ifd[:value] - 8) * 8, ifd[:length] * 8)}
         {_, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: ifd[:value]}
       end
     end)
