@@ -68,8 +68,8 @@ defmodule FormatParser do
     ifd = ifd_tag(<< ifd_first :: size(96) >>)
     ifd2 = ifd_tag(<< ifd_2nd :: size(96) >>)
 
-    if ifd[:tag] == 256, do: width = ifd[:value], else: width = ifd2[:value]
-    if ifd2[:tag] == 257, do: height = ifd2[:value], else: height = ifd_tag(<< ifd_3rd :: size(96) >>)[:value]
+    width = if ifd[:tag] == 256, do: ifd[:value], else: ifd2[:value]
+    height = if ifd2[:tag] == 257, do: ifd2[:value], else: ifd_tag(<< ifd_3rd :: size(96) >>)[:value]
 
     %Image{format: :tif, width_px: width, height_px: height}
   end
