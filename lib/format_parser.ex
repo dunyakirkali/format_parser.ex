@@ -76,30 +76,40 @@ defmodule FormatParser do
 
   defp parse_tif(<< ifd_offset  :: little-integer-size(32), _x :: binary >>) do
     offset = (ifd_offset - 8) * 8
+    ifd_set = parse_ifd(<< _x :: binary >>, offset)
+
+    width = Enum.find(ifd_set, fn(x) -> x[:tag] == 256 end)
+    height = Enum.find(ifd_set, fn(x) -> x[:tag] == 257 end)
+    description = Enum.find(ifd_set, fn(x) -> x[:tag] == 270 end)
+    make = Enum.find(ifd_set, fn(x) -> x[:tag] == 271 end)
+
+    if description, do: maker = description, else: maker = make
+    maker = parse_string(<< _x :: binary >>, (maker[:value] - 8) * 8, maker[:length] * 8)
+
+    if Regex.match?(~r/nikon .+/, maker |> String.downcase) do
+      %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
+    else
+      %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
+    end
+  end
+
+  defp parse_ifd(<< _x :: binary >>, offset) do
     <<
       _head :: size(offset),
       size :: little-integer-size(16),
-      ifd_first :: size(96),
+      ifd_1st :: size(96),
       ifd_2nd :: size(96),
       ifd_3rd :: size(96),
       _chunk :: size(288),
+      ifd_description :: size(96),
       ifd_make :: size(96),
-      ifd_make2 :: size(96),
       _rest :: binary
     >> = << _x :: binary >>
 
-    ifd = ifd_tag(<< ifd_first :: size(96) >>)
-    ifd2 = ifd_tag(<< ifd_2nd :: size(96) >>)
-    ifd_model = ifd_tag(<< ifd_make :: size(96) >>)
-
-    width = if ifd[:tag] == 256, do: ifd[:value], else: ifd2[:value]
-    height = if ifd2[:tag] == 257, do: ifd2[:value], else: ifd_tag(<< ifd_3rd :: size(96) >>)[:value]
-
-    make = if ifd_model[:tag] == 270, do: ifd_model[:value], else: ifd_tag(<< ifd_make2 :: size(96) >>)[:value]
-    length = if ifd_model[:tag] == 270, do: ifd_model[:length], else: ifd_tag(<< ifd_make2 :: size(96) >>)[:length]
-
-    maker = parse_string(<< _x :: binary >>, (make - 8) * 8, length * 8)
-    if Regex.match?(~r/nikon .+/, maker |> String.downcase), do: %Image{format: :nef, width_px: width, height_px: height}, else: %Image{format: :tif, width_px: width, height_px: height}
+    Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_description, ifd_make], fn(x) ->
+      ifd = ifd_tag(<< x :: size(96) >>)
+      %{tag: ifd[:tag], value: ifd[:value], length: ifd[:length]}
+    end)
   end
 
   defp ifd_tag(<< ifd_set :: binary >>) do
