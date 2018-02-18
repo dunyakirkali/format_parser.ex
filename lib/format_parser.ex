@@ -62,16 +62,24 @@ defmodule FormatParser do
       ifd_first :: size(96),
       ifd_2nd :: size(96),
       ifd_3rd :: size(96),
+      _chunk :: size(288),
+      ifd_make :: size(96),
+      ifd_make2 :: size(96),
       _rest :: binary
     >> = << _x :: binary >>
 
     ifd = ifd_tag(<< ifd_first :: size(96) >>)
     ifd2 = ifd_tag(<< ifd_2nd :: size(96) >>)
+    ifd_model = ifd_tag(<< ifd_make :: size(96) >>)
 
     width = if ifd[:tag] == 256, do: ifd[:value], else: ifd2[:value]
     height = if ifd2[:tag] == 257, do: ifd2[:value], else: ifd_tag(<< ifd_3rd :: size(96) >>)[:value]
 
-    %Image{format: :tif, width_px: width, height_px: height}
+    make = if ifd_model[:tag] == 270, do: ifd_model[:value], else: ifd_tag(<< ifd_make2 :: size(96) >>)[:value]
+    length = if ifd_model[:tag] == 270, do: ifd_model[:length], else: ifd_tag(<< ifd_make2 :: size(96) >>)[:length]
+
+    maker = parse_maker(<< _x :: binary >>, (make - 8) * 8, length * 8)
+    if Regex.match?(~r/nikon .+/, maker |> String.downcase), do: %Image{format: :nef, width_px: width, height_px: height}, else: %Image{format: :tif, width_px: width, height_px: height}
   end
 
   defp ifd_tag(<< ifd_set :: binary >>) do
@@ -81,7 +89,16 @@ defmodule FormatParser do
       length :: little-integer-size(32),
       value :: little-integer-size(32),
     >> = << ifd_set :: binary >>
-    %{tag: tag, value: value}
+    %{tag: tag, value: value, length: length}
+  end
+
+  defp parse_maker(<< _x ::binary >>, offset, length) do
+    <<
+      _head :: size(offset),
+      make_str :: size(length),
+      _rest :: binary
+    >> = << _x :: binary >>
+    << make_str :: size(length)  >>
   end
 
   defp parse_cr2(<<_x:: binary>>) do
