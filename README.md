@@ -75,7 +75,7 @@ match.format        #=> :ttf
 | gif  | x      | x      | x     | x      |
 | ico  | x      | x      | x     | x      |
 | cur  | x      | x      | x     | x      |
-| cr2  | x      | x      | x     | x      |
+| cr2  | x      | x      |       |        |
 | nef  | x      | x      | x     | x      |
 | tif  | x      | x      | x     | x      |
 | bmp  | x      | x      | x     | x      |
