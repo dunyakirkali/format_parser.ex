@@ -35,6 +35,7 @@ defmodule FormatParser do
       <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, x :: binary>> -> parse_cr2(x)
       <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
+      <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
       <<0x00, 0x01, 0x00, 0x00, 0x00, x :: binary>> -> parse_ttf(x)
       <<"true", 0x00, x :: binary>> -> parse_ttf(x)
@@ -70,8 +71,12 @@ defmodule FormatParser do
     %Document{format: :rtf}
   end
 
-  defp parse_ico(<<_x:: binary>>) do
-    %Image{format: :ico}
+  defp parse_ico(<<_x :: size(16), width :: size(8), height :: size(8), _rest :: binary>>) do
+    %Image{format: :ico, width_px: 256 - width, height_px: 256 - height}
+  end
+  
+  defp parse_cur(<<_x :: size(16), width :: size(8), height :: size(8), _rest :: binary>>) do
+    %Image{format: :cur, width_px: 256 - width, height_px: 256 - height}
   end
 
   defp parse_tif(<<_x:: binary>>) do
