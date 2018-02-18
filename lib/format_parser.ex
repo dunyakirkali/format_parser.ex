@@ -72,11 +72,15 @@ defmodule FormatParser do
   end
 
   defp parse_ico(<<_x :: size(16), width :: size(8), height :: size(8), _rest :: binary>>) do
-    %Image{format: :ico, width_px: 256 - width, height_px: 256 - height}
+    width_px = if (width == 0), do: 256, else: width
+    height_px = if (height == 0), do: 256, else: height
+    %Image{format: :ico, width_px: width_px, height_px: height_px}
   end
   
   defp parse_cur(<<_x :: size(16), width :: size(8), height :: size(8), _rest :: binary>>) do
-    %Image{format: :cur, width_px: 256 - width, height_px: 256 - height}
+    width_px = if (width == 0), do: 256, else: width
+    height_px = if (height == 0), do: 256, else: height
+    %Image{format: :cur, width_px: width_px, height_px: height_px}
   end
 
   defp parse_tif(<< ifd_offset :: little-integer-size(32), x :: binary >>) do
