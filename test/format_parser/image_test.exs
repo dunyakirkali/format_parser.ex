@@ -19,6 +19,15 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).height_px == 600
   end
 
+  test "gif87a" do
+    {:ok, file} = File.read("priv/test_2.gif")
+
+    assert FormatParser.parse(file).format == :gif
+    assert FormatParser.parse(file).nature == :image
+    assert FormatParser.parse(file).width_px == 130
+    assert FormatParser.parse(file).height_px == 42
+  end
+  
   test "cr2" do
     {:ok, file} = File.read("priv/test.cr2")
 
