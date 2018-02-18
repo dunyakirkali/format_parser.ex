@@ -112,7 +112,6 @@ defmodule FormatParser do
     %{tag: tag, value: value, length: length}
   end
 
-    <<
   defp parse_string(<< _x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = << _x :: binary >>
     << string :: size(length)  >>
