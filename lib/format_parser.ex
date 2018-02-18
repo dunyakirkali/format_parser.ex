@@ -97,22 +97,20 @@ defmodule FormatParser do
     >> = << _x :: binary >>
 
     Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_make], fn(x) ->
-      ifd = ifd_tag(<< _x :: binary >>, << x :: size(96) >>)
-      %{tag: ifd[:tag], value: ifd[:value], length: ifd[:length]}
+      case ifd_tag(<< x :: size(96) >>) do
+        {271, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: parse_string(<< _x ::binary >>, (ifd[:value] - 8) * 8, ifd[:length]  * 8)}
+        {_, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: ifd[:value]}
+      end
     end)
   end
 
-  defp ifd_tag(<< _x ::binary >>, << tag :: little-integer-size(16), type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
-    case type do
-      2 -> val = parse_string(<< _x ::binary >>, (value - 8) * 8, length  * 8) |> String.downcase
-      _ -> val = value
-    end
-    %{tag: tag, value: val, length: length}
+  defp ifd_tag(<< tag :: little-integer-size(16), type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
+    {tag, %{tag: tag, length: length, value: value}}
   end
 
   defp parse_string(<< _x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = << _x :: binary >>
-    << string :: size(length)  >>
+    << string :: size(length)  >> |> String.downcase
   end
 
   defp parse_cr2(<<_x:: binary>>) do
