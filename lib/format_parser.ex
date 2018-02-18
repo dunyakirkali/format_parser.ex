@@ -80,13 +80,9 @@ defmodule FormatParser do
 
     width = Enum.find(ifd_set, fn(x) -> x[:tag] == 256 end)
     height = Enum.find(ifd_set, fn(x) -> x[:tag] == 257 end)
-    description = Enum.find(ifd_set, fn(x) -> x[:tag] == 270 end)
     make = Enum.find(ifd_set, fn(x) -> x[:tag] == 271 end)
 
-    if description, do: maker = description, else: maker = make
-    maker = parse_string(<< _x :: binary >>, (maker[:value] - 8) * 8, maker[:length] * 8)
-
-    if Regex.match?(~r/nikon .+/, maker |> String.downcase) do
+    if make && Regex.match?(~r/nikon .+/, make[:value]) do
       %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
     else
       %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
@@ -97,19 +93,21 @@ defmodule FormatParser do
     <<
       _head :: size(offset), size :: little-integer-size(16),
       ifd_1st :: size(96), ifd_2nd :: size(96), ifd_3rd :: size(96),
-      _chunk :: size(288),
-      ifd_description :: size(96), ifd_make :: size(96),
-      _rest :: binary
+      _chunk :: size(288), ifd_make :: size(96),  _rest :: binary
     >> = << _x :: binary >>
 
-    Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_description, ifd_make], fn(x) ->
-      ifd = ifd_tag(<< x :: size(96) >>)
+    Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_make], fn(x) ->
+      ifd = ifd_tag(<< _x :: binary >>, << x :: size(96) >>)
       %{tag: ifd[:tag], value: ifd[:value], length: ifd[:length]}
     end)
   end
 
-  defp ifd_tag(<< tag :: little-integer-size(16), type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
-    %{tag: tag, value: value, length: length}
+  defp ifd_tag(<< _x ::binary >>, << tag :: little-integer-size(16), type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
+    case type do
+      2 -> val = parse_string(<< _x ::binary >>, (value - 8) * 8, length  * 8) |> String.downcase
+      _ -> val = value
+    end
+    %{tag: tag, value: val, length: length}
   end
 
   defp parse_string(<< _x ::binary >>, offset, length) do
