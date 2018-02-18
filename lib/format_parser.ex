@@ -98,7 +98,7 @@ defmodule FormatParser do
     make = if ifd_model[:tag] == 270, do: ifd_model[:value], else: ifd_tag(<< ifd_make2 :: size(96) >>)[:value]
     length = if ifd_model[:tag] == 270, do: ifd_model[:length], else: ifd_tag(<< ifd_make2 :: size(96) >>)[:length]
 
-    maker = parse_maker(<< _x :: binary >>, (make - 8) * 8, length * 8)
+    maker = parse_string(<< _x :: binary >>, (make - 8) * 8, length * 8)
     if Regex.match?(~r/nikon .+/, maker |> String.downcase), do: %Image{format: :nef, width_px: width, height_px: height}, else: %Image{format: :tif, width_px: width, height_px: height}
   end
 
@@ -112,13 +112,10 @@ defmodule FormatParser do
     %{tag: tag, value: value, length: length}
   end
 
-  defp parse_maker(<< _x ::binary >>, offset, length) do
     <<
-      _head :: size(offset),
-      make_str :: size(length),
-      _rest :: binary
-    >> = << _x :: binary >>
-    << make_str :: size(length)  >>
+  defp parse_string(<< _x ::binary >>, offset, length) do
+    << _ :: size(offset), string :: size(length), _ :: binary >> = << _x :: binary >>
+    << string :: size(length)  >>
   end
 
   defp parse_cr2(<<_x:: binary>>) do
