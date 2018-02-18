@@ -56,25 +56,32 @@ defmodule FormatParser do
 
   defp parse_tif(<< ifd_offset  :: little-integer-size(32), _x :: binary >>) do
     offset = (ifd_offset - 8) * 8
-    << header :: size(offset), size :: little-integer-size(16), _rest :: binary >> = << _x :: binary >>
-    ifds_size = size * 8 * 12
-    << ifd_set :: size(ifds_size), _drest :: binary >> = _rest
-    width = parse_ifd(<< ifd_set :: size(ifds_size) >>, 256)
-    height = parse_ifd(<< ifd_set :: size(ifds_size) >>, 256)
-    %Image{format: :tif}
+    <<
+      _head :: size(offset),
+      size :: little-integer-size(16),
+      ifd_first :: size(96),
+      ifd_2nd :: size(96),
+      ifd_3rd :: size(96),
+      _rest :: binary
+    >> = << _x :: binary >>
+
+    ifd = ifd_tag(<< ifd_first :: size(96) >>)
+    ifd2 = ifd_tag(<< ifd_2nd :: size(96) >>)
+
+    if ifd[:tag] == 256, do: width = ifd[:value], else: width = ifd2[:value]
+    if ifd2[:tag] == 257, do: height = ifd2[:value], else: height = ifd_tag(<< ifd_3rd :: size(96) >>)[:value]
+
+    %Image{format: :tif, width_px: width, height_px: height}
   end
 
-  defp parse_ifd( << ifd_set :: binary >>, searched_tag) do
-    for << chunk::size(96) <- << ifd_set :: binary >> >> do
-      <<
+  defp ifd_tag(<< ifd_set :: binary >>) do
+    <<
       tag :: little-integer-size(16),
       type :: little-integer-size(16),
       length :: little-integer-size(32),
       value :: little-integer-size(32),
-      _rest :: binary
-      >> = <<chunk::size(96)>>
-      if tag == searched_tag, do: value, else: 0
-    end
+    >> = << ifd_set :: binary >>
+    %{tag: tag, value: value}
   end
 
   defp parse_cr2(<<_x:: binary>>) do

@@ -33,8 +33,8 @@ defmodule FormatParser.ImageTest do
 
     assert FormatParser.parse(file).format == :tif
     assert FormatParser.parse(file).nature == :image
-    # assert FormatParser.parse(file).width_px == 4368
-    # assert FormatParser.parse(file).height_px == 2912
+    assert FormatParser.parse(file).width_px == 212
+    assert FormatParser.parse(file).height_px == 320
   end
 
   test "ico" do
@@ -51,8 +51,8 @@ defmodule FormatParser.ImageTest do
 
     assert FormatParser.parse(file).format == :tif
     assert FormatParser.parse(file).nature == :image
-    # assert FormatParser.parse(file).width_px == 1728
-    # assert FormatParser.parse(file).height_px == 2376
+    assert FormatParser.parse(file).width_px == 1728
+    assert FormatParser.parse(file).height_px == 2376
   end
 
   test "bmp" do
