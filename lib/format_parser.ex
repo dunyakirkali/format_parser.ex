@@ -95,14 +95,10 @@ defmodule FormatParser do
 
   defp parse_ifd(<< _x :: binary >>, offset) do
     <<
-      _head :: size(offset),
-      size :: little-integer-size(16),
-      ifd_1st :: size(96),
-      ifd_2nd :: size(96),
-      ifd_3rd :: size(96),
+      _head :: size(offset), size :: little-integer-size(16),
+      ifd_1st :: size(96), ifd_2nd :: size(96), ifd_3rd :: size(96),
       _chunk :: size(288),
-      ifd_description :: size(96),
-      ifd_make :: size(96),
+      ifd_description :: size(96), ifd_make :: size(96),
       _rest :: binary
     >> = << _x :: binary >>
 
@@ -112,13 +108,7 @@ defmodule FormatParser do
     end)
   end
 
-  defp ifd_tag(<< ifd_set :: binary >>) do
-    <<
-      tag :: little-integer-size(16),
-      type :: little-integer-size(16),
-      length :: little-integer-size(32),
-      value :: little-integer-size(32),
-    >> = << ifd_set :: binary >>
+  defp ifd_tag(<< tag :: little-integer-size(16), type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
     %{tag: tag, value: value, length: length}
   end
 
