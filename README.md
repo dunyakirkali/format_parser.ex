@@ -73,9 +73,10 @@ match.format        #=> :ttf
 | :--: | :----: | :----: | :---: | :----: |
 | jpg  | x      | x      |       |        |
 | gif  | x      | x      | x     | x      |
-| cr2  | x      | x      |       |        |
 | ico  | x      | x      |       |        |
-| tif  | x      | x      |       |        |
+| cr2  | x      | x      |       |        |
+| nef  | x      | x      | x     | x      |
+| tif  | x      | x      | x     | x      |
 | bmp  | x      | x      | x     | x      |
 | png  | x      | x      | x     | x      |
 | psd  | x      | x      |       |        |
