@@ -74,9 +74,9 @@ defmodule FormatParser do
     %Image{format: :ico}
   end
 
-  defp parse_tif(<< ifd_offset :: little-integer-size(32), _x :: binary >>) do
+  defp parse_tif(<< ifd_offset :: little-integer-size(32), x :: binary >>) do
     offset = (ifd_offset - 8) * 8
-    ifd_set = parse_ifd(<< _x :: binary >>, offset)
+    ifd_set = parse_ifd(x, offset)
 
     width = Enum.find(ifd_set, fn(x) -> x[:tag] == 256 end)
     height = Enum.find(ifd_set, fn(x) -> x[:tag] == 257 end)
@@ -109,7 +109,7 @@ defmodule FormatParser do
   end
 
   defp parse_string(<< x ::binary >>, offset, length) do
-    << _ :: size(offset), string :: size(length), _ :: binary >> = << x :: binary >>
+    << _ :: size(offset), string :: size(length), _ :: binary >> = x
     << string :: size(length) >> |> String.downcase
   end
 
