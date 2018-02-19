@@ -113,7 +113,7 @@ defmodule FormatParser do
     parse_ifds(ifd_left, Map.merge(ifd, accumulator))
   end
 
-  defp shift(offset, amount), do: (offset - amount) * 8
+  defp shift(offset, byte), do: (offset - byte) * 8
 
   defp parse_string(<< x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = x
