@@ -104,12 +104,11 @@ defmodule FormatParser do
     parse_ifds(<< ifd_set :: size(ifds_size) >>, %{})
   end
 
+  defp parse_ifds(<<>>, accumulator), do: accumulator
   defp parse_ifds(<< tag :: little-integer-size(16), _type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, chunk) do
     ifd = %{tag => %{tag: tag, length: length, value: value}}
-    parse_ifds(<< ifd_left :: binary >>, Map.merge(ifd, chunk))
+    parse_ifds(ifd_left, Map.merge(ifd, chunk))
   end
-
-  defp parse_ifds(<<>>, ifds), do: ifds
 
   defp parse_string(<< x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = x
