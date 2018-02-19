@@ -83,12 +83,12 @@ defmodule FormatParser do
     %Image{format: :cur, width_px: width_px, height_px: height_px}
   end
 
-  defp parse_tif(<< ifd_offset :: little-integer-size(32), x :: binary >>) do
-    ifd_set = parse_ifd(x, (ifd_offset - 8) * 8)
+  defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
+    exif = parse_exif(x, (exif_offset - 8) * 8)
 
-    width = ifd_set[256]
-    height = ifd_set[257]
-    make = unless ifd_set[271] == nil, do: parse_string(<< x ::binary >>, (ifd_set[271][:value] - 8) * 8, ifd_set[271][:length] * 8), else: ""
+    width = exif[256]
+    height = exif[257]
+    make = unless exif[271] == nil, do: parse_string(<< x ::binary >>, (exif[271][:value] - 8) * 8, exif[271][:length] * 8), else: ""
 
     if Regex.match?(~r/nikon .+/, make) do
       %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
@@ -97,7 +97,7 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_ifd(<< x :: binary >>, offset) do
+  defp parse_exif(<< x :: binary >>, offset) do
     << _head :: size(offset), size :: little-integer-size(16), rest :: binary >> = << x :: binary >>
     ifds_size = size * 12 * 8
     << ifd_set :: size(ifds_size), _rest :: binary >> = <<rest::binary>>
@@ -116,9 +116,9 @@ defmodule FormatParser do
     << string :: size(length) >> |> String.downcase
   end
 
-  defp parse_cr2(<< ifd_offset :: little-integer-size(32), x :: binary >>) do
-    ifd_set = parse_ifd(x, 0)
-    %Image{format: :cr2, width_px: ifd_set[256][:value], height_px: ifd_set[257][:value]}
+  defp parse_cr2(<< _cr2 :: little-integer-size(32), x :: binary >>) do
+    exif = parse_exif(x, 0)
+    %Image{format: :cr2, width_px: exif[256][:value], height_px: exif[257][:value]}
   end
 
   defp parse_flac(<<_x:: binary>>) do
