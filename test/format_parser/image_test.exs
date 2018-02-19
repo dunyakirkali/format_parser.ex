@@ -24,8 +24,8 @@ defmodule FormatParser.ImageTest do
 
     assert FormatParser.parse(file).format == :cr2
     assert FormatParser.parse(file).nature == :image
-    # assert FormatParser.parse(file).width_px == 4368
-    # assert FormatParser.parse(file).height_px == 2912
+    assert FormatParser.parse(file).width_px == 2496
+    assert FormatParser.parse(file).height_px == 1664
   end
 
   test "nef" do

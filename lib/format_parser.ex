@@ -32,7 +32,7 @@ defmodule FormatParser do
       <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
-      <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, x :: binary>> -> parse_cr2(x)
+      <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, 0x02, 0x00, x :: binary>> -> parse_cr2(x)
       <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
@@ -117,8 +117,9 @@ defmodule FormatParser do
     << string :: size(length) >> |> String.downcase
   end
 
-  defp parse_cr2(<<_x:: binary>>) do
-    %Image{format: :cr2}
+  defp parse_cr2(<< ifd_offset :: little-integer-size(32), x :: binary >>) do
+    ifd_set = parse_ifd(x, 0)
+    %Image{format: :cr2, width_px: ifd_set[256][:value], height_px: ifd_set[257][:value]}
   end
 
   defp parse_flac(<<_x:: binary>>) do
