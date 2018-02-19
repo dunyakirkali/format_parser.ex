@@ -47,19 +47,19 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_fon(<<_x :: binary>>) do
+  defp parse_fon(<<_ :: binary>>) do
     %Font{format: :fon}
   end
 
-  defp parse_psd(<<_x :: binary>>) do
+  defp parse_psd(<<_ :: binary>>) do
     %Image{format: :psd}
   end
 
-  defp parse_mp3(<<_x :: binary>>) do
+  defp parse_mp3(<<_ :: binary>>) do
     %Audio{format: :mp3}
   end
 
-  defp parse_otf(<<_x :: binary>>) do
+  defp parse_otf(<<_ :: binary>>) do
     %Font{format: :otf}
   end
 
@@ -71,31 +71,31 @@ defmodule FormatParser do
     %Document{format: :rtf}
   end
 
-  defp parse_ico(<<_x :: size(16), width :: size(8), height :: size(8), _rest :: binary>>) do
+  defp parse_ico(<<_ :: size(16), width :: size(8), height :: size(8), _ :: binary>>) do
     width_px = if (width == 0), do: 256, else: width
     height_px = if (height == 0), do: 256, else: height
     %Image{format: :ico, width_px: width_px, height_px: height_px}
   end
   
-  defp parse_cur(<<_x :: size(16), width :: size(8), height :: size(8), _rest :: binary>>) do
+  defp parse_cur(<<_ :: size(16), width :: size(8), height :: size(8), _ :: binary>>) do
     width_px = if (width == 0), do: 256, else: width
     height_px = if (height == 0), do: 256, else: height
     %Image{format: :cur, width_px: width_px, height_px: height_px}
   end
 
-  defp parse_tif(<<_x:: binary>>) do
+  defp parse_tif(<<_ :: binary>>) do
     %Image{format: :tif}
   end
 
-  defp parse_cr2(<<_x:: binary>>) do
+  defp parse_cr2(<<_ :: binary>>) do
     %Image{format: :cr2}
   end
 
-  defp parse_flac(<<_x:: binary>>) do
+  defp parse_flac(<<_ :: binary>>) do
     %Audio{format: :flac}
   end
 
-  defp parse_ogg(<<_x:: binary>>) do
+  defp parse_ogg(<<_ :: binary>>) do
     %Audio{format: :ogg}
   end
 
