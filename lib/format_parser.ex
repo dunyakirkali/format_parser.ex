@@ -76,7 +76,7 @@ defmodule FormatParser do
     height_px = if (height == 0), do: 256, else: height
     %Image{format: :ico, width_px: width_px, height_px: height_px}
   end
-  
+
   defp parse_cur(<<_x :: size(16), width :: size(8), height :: size(8), _rest :: binary>>) do
     width_px = if (width == 0), do: 256, else: width
     height_px = if (height == 0), do: 256, else: height
@@ -84,11 +84,11 @@ defmodule FormatParser do
   end
 
   defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
-    exif = parse_exif(x, (exif_offset - 8) * 8)
+    exif = parse_exif(x, shift(exif_offset, 8))
 
     width = exif[256]
     height = exif[257]
-    make = unless exif[271] == nil, do: parse_string(<< x ::binary >>, (exif[271][:value] - 8) * 8, exif[271][:length] * 8), else: ""
+    make = unless exif[271] == nil, do: parse_string(<< x ::binary >>, shift(exif[271][:value], 8), shift(exif[271][:length], 0)), else: ""
 
     if Regex.match?(~r/nikon .+/, make) do
       %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
@@ -110,6 +110,8 @@ defmodule FormatParser do
   end
 
   defp parse_ifds(<<>>, ifds), do: ifds
+
+  defp shift(offset, amount), do: (offset - amount) * 8
 
   defp parse_string(<< x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = x
