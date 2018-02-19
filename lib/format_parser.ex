@@ -32,7 +32,6 @@ defmodule FormatParser do
       <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
-      <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, 0x02, 0x00, x :: binary>> -> parse_cr2(x)
       <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
@@ -85,15 +84,14 @@ defmodule FormatParser do
 
   defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
     exif = parse_exif(x, shift(exif_offset, 8))
-
     width = exif[256]
     height = exif[257]
     make = unless exif[271] == nil, do: parse_string(<< x ::binary >>, shift(exif[271][:value], 8), shift(exif[271][:length], 0)), else: ""
 
-    if Regex.match?(~r/nikon .+/, make) do
-      %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
-    else
-      %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
+    cond do
+     Regex.match?(~r/canon.+/, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
+     Regex.match?(~r/nikon.+/, make) -> %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
+     make == "" -> %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
     end
   end
 
@@ -115,11 +113,6 @@ defmodule FormatParser do
   defp parse_string(<< x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = x
     << string :: size(length) >> |> String.downcase
-  end
-
-  defp parse_cr2(<< _cr2 :: little-integer-size(32), x :: binary >>) do
-    exif = parse_exif(x, 0)
-    %Image{format: :cr2, width_px: exif[256][:value], height_px: exif[257][:value]}
   end
 
   defp parse_flac(<<_x:: binary>>) do
