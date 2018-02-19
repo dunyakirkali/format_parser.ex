@@ -84,12 +84,11 @@ defmodule FormatParser do
   end
 
   defp parse_tif(<< ifd_offset :: little-integer-size(32), x :: binary >>) do
-    offset = (ifd_offset - 8) * 8
-    ifd_set = parse_ifd(x, offset)
+    ifd_set = parse_ifd(x, (ifd_offset - 8) * 8)
 
     width = ifd_set[256]
     height = ifd_set[257]
-    make = if ifd_set[271] != nil, do: parse_string(<< x ::binary >>, (ifd_set[271][:value] - 8) * 8, ifd_set[271][:length] * 8), else: ""
+    make = unless ifd_set[271] == nil, do: parse_string(<< x ::binary >>, (ifd_set[271][:value] - 8) * 8, ifd_set[271][:length] * 8), else: ""
 
     if Regex.match?(~r/nikon .+/, make) do
       %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
