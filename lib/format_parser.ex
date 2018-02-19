@@ -99,31 +99,31 @@ defmodule FormatParser do
     %Audio{format: :ogg}
   end
 
-  defp parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), _x :: binary>>) do
+  defp parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), _ :: binary>>) do
     %Audio{format: :wav, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
   end
 
-  defp parse_aiff(<<_ :: size(56), "COMM", _ :: size(96), sample_rate_hz :: size(80), _x :: binary>>) do
+  defp parse_aiff(<<_ :: size(56), "COMM", _ :: size(96), sample_rate_hz :: size(80), _ :: binary>>) do
     %Audio{format: :aiff, sample_rate_hz: sample_rate_hz}
   end
 
-  defp parse_flv(_x) do
+  defp parse_flv(<<_ :: binary>>) do
     %Video{format: :flv}
   end
 
-  defp parse_gif(<< width :: little-integer-size(16), height :: little-integer-size(16), _x :: binary>>) do
+  defp parse_gif(<< width :: little-integer-size(16), height :: little-integer-size(16), _ :: binary>>) do
     %Image{format: :gif, width_px: width, height_px: height}
   end
 
-  defp parse_jpeg(_binary) do
+  defp parse_jpeg(<<_ :: binary>>) do
     %Image{format: :jpg}
   end
 
-  defp parse_bmp(<< _header :: size(128), width :: little-integer-size(32), height :: little-integer-size(32), _x :: binary>>) do
+  defp parse_bmp(<< _ :: size(128), width :: little-integer-size(32), height :: little-integer-size(32), _ :: binary>>) do
     %Image{format: :bmp, width_px: width, height_px: height}
   end
 
-  defp parse_png(<< _length :: size(32), "IHDR", width :: size(32), height :: size(32), _x :: binary>>) do
+  defp parse_png(<< _ :: size(32), "IHDR", width :: size(32), height :: size(32), _ :: binary>>) do
     %Image{format: :png, width_px: width, height_px: height}
   end
 end
