@@ -87,11 +87,11 @@ defmodule FormatParser do
     offset = (ifd_offset - 8) * 8
     ifd_set = parse_ifd(x, offset)
 
-    width = Enum.find(ifd_set, fn(x) -> x[:tag] == 256 end)
-    height = Enum.find(ifd_set, fn(x) -> x[:tag] == 257 end)
-    make = Enum.find(ifd_set, fn(x) -> x[:tag] == 271 end)
+    width = ifd_set[256]
+    height = ifd_set[257]
+    make = if ifd_set[271] != nil, do: parse_string(<< x ::binary >>, (ifd_set[271][:value] - 8) * 8, ifd_set[271][:length] * 8), else: ""
 
-    if make && Regex.match?(~r/nikon .+/, make[:value]) do
+    if Regex.match?(~r/nikon .+/, make) do
       %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
     else
       %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
@@ -99,20 +99,18 @@ defmodule FormatParser do
   end
 
   defp parse_ifd(<< x :: binary >>, offset) do
-    head_size = offset + 16
-    << _head :: size(head_size), ifd_1st :: size(96), ifd_2nd :: size(96), ifd_3rd :: size(96), _chunk :: size(288), ifd_make :: size(96), _rest :: binary >> = x
-    
-    Enum.map([ifd_1st, ifd_2nd, ifd_3rd, ifd_make], fn(ifd) ->
-      case ifd_tag(<< ifd :: size(96) >>) do
-        {271, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: parse_string(x, (ifd[:value] - 8) * 8, ifd[:length] * 8)}
-        {_, ifd} -> %{tag: ifd[:tag], length: ifd[:length], value: ifd[:value]}
-      end
-    end)
+    << _head :: size(offset), size :: little-integer-size(16), rest :: binary >> = << x :: binary >>
+    ifds_size = size * 12 * 8
+    << ifd_set :: size(ifds_size), _rest :: binary >> = <<rest::binary>>
+    parse_ifds(<< ifd_set :: size(ifds_size) >>, %{})
   end
 
-  defp ifd_tag(<< tag :: little-integer-size(16), _type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32) >>) do
-    {tag, %{tag: tag, length: length, value: value}}
+  defp parse_ifds(<< tag :: little-integer-size(16), _type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, chunk) do
+    ifd = %{tag => %{tag: tag, length: length, value: value}}
+    parse_ifds(<< ifd_left :: binary >>, Map.merge(ifd, chunk))
   end
+
+  defp parse_ifds(<<>>, ifds), do: ifds
 
   defp parse_string(<< x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = x
