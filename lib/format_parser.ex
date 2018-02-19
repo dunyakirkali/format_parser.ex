@@ -98,9 +98,9 @@ defmodule FormatParser do
   end
 
   defp parse_exif(<< x :: binary >>, offset) do
-    << _head :: size(offset), size :: little-integer-size(16), rest :: binary >> = << x :: binary >>
+    << _head :: size(offset), size :: little-integer-size(16), rest :: binary >> = x
     ifds_size = size * 12 * 8
-    << ifd_set :: size(ifds_size), _rest :: binary >> = <<rest::binary>>
+    << ifd_set :: size(ifds_size), _rest :: binary >> = rest
     parse_ifds(<< ifd_set :: size(ifds_size) >>, %{})
   end
 
