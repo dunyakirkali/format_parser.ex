@@ -98,14 +98,14 @@ defmodule FormatParser do
   end
 
   defp parse_exif(<< x :: binary >>, offset) do
-    << _head :: size(offset), size :: little-integer-size(16), rest :: binary >> = x
+    << _ :: size(offset), size :: little-integer-size(16), rest :: binary >> = x
     ifds_size = size * 12 * 8
-    << ifd_set :: size(ifds_size), _rest :: binary >> = rest
+    << ifd_set :: size(ifds_size), _ :: binary >> = rest
     parse_ifds(<< ifd_set :: size(ifds_size) >>, %{})
   end
 
   defp parse_ifds(<<>>, accumulator), do: accumulator
-  defp parse_ifds(<< tag :: little-integer-size(16), _type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, chunk) do
+  defp parse_ifds(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, chunk) do
     ifd = %{tag => %{tag: tag, length: length, value: value}}
     parse_ifds(ifd_left, Map.merge(ifd, chunk))
   end
