@@ -88,7 +88,7 @@ defmodule FormatParser do
 
     width = exif[256]
     height = exif[257]
-    make = unless exif[271] == nil, do: parse_string(<< x ::binary >>, shift(exif[271][:value], 8), shift(exif[271][:length], 0)), else: ""
+    make = unless exif[271] == nil, do: parse_string(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0)), else: ""
 
     if Regex.match?(~r/nikon .+/, make) do
       %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
