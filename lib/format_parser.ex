@@ -85,15 +85,17 @@ defmodule FormatParser do
 
   defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
     exif = parse_exif(x, shift(exif_offset, 8))
-
-    width = exif[256]
-    height = exif[257]
-    make = unless exif[271] == nil, do: parse_string(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0)), else: ""
+    make =
+      if exif[271] do
+        parse_string(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
+      else
+        ""
+      end
 
     if Regex.match?(~r/nikon .+/, make) do
-      %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
+      %Image{format: :nef, width_px: exif[256][:value], height_px: exif[257][:value]}
     else
-      %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
+      %Image{format: :tif, width_px: exif[256][:value], height_px: exif[257][:value]}
     end
   end
 
