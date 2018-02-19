@@ -86,7 +86,12 @@ defmodule FormatParser do
     exif = parse_exif(x, shift(exif_offset, 8))
     width = exif[256]
     height = exif[257]
-    make = unless exif[271] == nil, do: parse_string(<< x ::binary >>, shift(exif[271][:value], 8), shift(exif[271][:length], 0)), else: ""
+    make =
+      if exif[271] do
+        parse_string(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
+      else
+        ""
+      end
 
     cond do
      Regex.match?(~r/canon.+/, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
@@ -103,9 +108,9 @@ defmodule FormatParser do
   end
 
   defp parse_ifds(<<>>, accumulator), do: accumulator
-  defp parse_ifds(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, chunk) do
+  defp parse_ifds(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, accumulator) do
     ifd = %{tag => %{tag: tag, length: length, value: value}}
-    parse_ifds(ifd_left, Map.merge(ifd, chunk))
+    parse_ifds(ifd_left, Map.merge(ifd, accumulator))
   end
 
   defp shift(offset, amount), do: (offset - amount) * 8
