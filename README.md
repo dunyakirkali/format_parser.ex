@@ -97,7 +97,7 @@ match.format        #=> :ttf
 ```elixir
 def deps do
   [
-    {:format_parser, "~> 0.7.0"}
+    {:format_parser, "~> 0.8.0"}
   ]
 end
 ```
