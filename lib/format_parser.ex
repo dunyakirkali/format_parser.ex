@@ -86,12 +86,7 @@ defmodule FormatParser do
     exif = parse_exif(x, shift(exif_offset, 8))
     width = exif[256]
     height = exif[257]
-    make =
-      if exif[271] do
-        parse_string(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
-      else
-        ""
-      end
+    make = parse_make_tag(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
 
     cond do
      Regex.match?(~r/canon.+/, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
@@ -113,9 +108,9 @@ defmodule FormatParser do
     parse_ifds(ifd_left, Map.merge(ifd, accumulator))
   end
 
-  defp shift(offset, byte), do: (offset - byte) * 8
+  defp shift(offset, byte), do: unless offset == nil, do: (offset - byte) * 8, else: 0
 
-  defp parse_string(<< x ::binary >>, offset, length) do
+  defp parse_make_tag(<< x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = x
     << string :: size(length) >> |> String.downcase
   end
