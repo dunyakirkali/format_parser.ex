@@ -13,6 +13,10 @@ defmodule FormatParser do
       iex> {:ok, file} = File.read("priv/test.jpg")
       iex> FormatParser.parse(file)
       %FormatParser.Image{format: :jpg, height_px: nil, nature: :image, width_px: nil}
+      
+      iex> {:ok, file} = File.read("priv/test.html")
+      iex> FormatParser.parse(file)
+      {:error, "Unknown"}
 
   """
   @spec parse(binary) :: struct
@@ -28,8 +32,7 @@ defmodule FormatParser do
       <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
-      <<0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, x :: binary>> -> parse_cr2(x)
-      <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x)
+      <<"II", 0x2A, 0x00, x :: binary>> -> parse_tif(x)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
@@ -79,12 +82,38 @@ defmodule FormatParser do
     %Image{format: :cur, width_px: width_px, height_px: height_px}
   end
 
-  defp parse_tif(<<_ :: binary>>) do
-    %Image{format: :tif}
+  defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
+    exif = parse_exif(x, shift(exif_offset, 8))
+    width = exif[256]
+    height = exif[257]
+    make = parse_make_tag(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
+
+    cond do
+     Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
+     Regex.match?(~r/nikon.+/i, make) -> %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
+     make == "" -> %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
+    end
   end
 
-  defp parse_cr2(<<_ :: binary>>) do
-    %Image{format: :cr2}
+  defp parse_exif(<< x :: binary >>, offset) do
+    << _ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary >> = x
+    ifds_sizes = ifd_count * 12 * 8
+    << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
+    parse_ifds(<< ifd_set :: size(ifds_sizes) >>, %{})
+  end
+
+  defp parse_ifds(<<>>, accumulator), do: accumulator
+  defp parse_ifds(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, accumulator) do
+    ifd = %{tag => %{tag: tag, length: length, value: value}}
+    parse_ifds(ifd_left, Map.merge(ifd, accumulator))
+  end
+
+  defp shift(offset, _) when is_nil(offset), do: 0
+  defp shift(offset, byte), do: (offset - byte) * 8
+
+  defp parse_make_tag(<< x ::binary >>, offset, len) do
+    << _ :: size(offset), make_tag :: size(len), _ :: binary >> = x
+    << make_tag :: size(len) >>
   end
 
   defp parse_flac(<<_ :: binary>>) do
