@@ -81,6 +81,7 @@ match.format        #=> :ttf
 | bmp  | x      | x      | x     | x      |
 | png  | x      | x      | x     | x      |
 | psd  | x      | x      |       |        |
+| jb2  | x      | x      |       |        |
 
 ### Font
 

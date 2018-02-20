@@ -42,8 +42,13 @@ defmodule FormatParser do
       <<"ID3", x :: binary>> -> parse_mp3(x)
       <<"8BPS", x :: binary>> -> parse_psd(x)
       <<0x4d, 0x5A, x :: binary>> -> parse_fon(x)
+      <<0x97, 0x4A, 0x42, 0x32, 0x0D, 0x0A, 0x1A, 0x0A, x :: binary>> -> parse_jb2(x)
       _ -> {:error, "Unknown"}
     end
+  end
+  
+  defp parse_jb2(<<_ :: binary>>) do
+    %Image{format: :jb2}
   end
 
   defp parse_fon(<<_ :: binary>>) do
