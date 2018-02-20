@@ -44,8 +44,13 @@ defmodule FormatParser do
       <<0x4d, 0x5A, x :: binary>> -> parse_fon(x)
       <<0x97, 0x4A, 0x42, 0x32, 0x0D, 0x0A, 0x1A, 0x0A, x :: binary>> -> parse_jb2(x)
       <<"gimp xcf", x :: binary>> -> parse_xcf(x)
+      <<0x76, 0x2F, 0x31, 0x01, x :: binary>> -> parse_exr(x)
       _ -> {:error, "Unknown"}
     end
+  end
+  
+  defp parse_exr(<<_ :: binary>>) do
+    %Image{format: :exr}
   end
   
   defp parse_xcf(<<_ :: binary>>) do

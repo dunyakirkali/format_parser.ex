@@ -25,6 +25,13 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).format == :xcf
     assert FormatParser.parse(file).nature == :image
   end
+  
+  test "exr" do
+    {:ok, file} = File.read("priv/test.exr")
+
+    assert FormatParser.parse(file).format == :exr
+    assert FormatParser.parse(file).nature == :image
+  end
 
   test "gif" do
     {:ok, file} = File.read("priv/test.gif")
