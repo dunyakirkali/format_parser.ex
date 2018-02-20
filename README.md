@@ -80,7 +80,7 @@ match.format        #=> :ttf
 | tif  | x      | x      | x     | x      |
 | bmp  | x      | x      | x     | x      |
 | png  | x      | x      | x     | x      |
-| psd  | x      | x      |       |        |
+| psd  | x      | x      | x     | x      |
 | jb2  | x      | x      |       |        |
 | xcf  | x      | x      |       |        |
 

@@ -60,8 +60,8 @@ defmodule FormatParser do
     %Font{format: :fon}
   end
 
-  defp parse_psd(<<_ :: binary>>) do
-    %Image{format: :psd}
+  defp parse_psd(<<_ ::size(80), height :: size(32), width :: size(32), _ :: binary>>) do
+    %Image{format: :psd, width_px: width, height_px: height}
   end
 
   defp parse_mp3(<<_ :: binary>>) do
