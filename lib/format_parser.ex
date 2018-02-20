@@ -89,8 +89,8 @@ defmodule FormatParser do
     make = parse_make_tag(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
 
     cond do
-     Regex.match?(~r/canon.+/, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
-     Regex.match?(~r/nikon.+/, make) -> %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
+     Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
+     Regex.match?(~r/nikon.+/i, make) -> %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
      make == "" -> %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
     end
   end
@@ -108,12 +108,12 @@ defmodule FormatParser do
     parse_ifds(ifd_left, Map.merge(ifd, accumulator))
   end
 
-  defp shift(offset, byte) when offset == nil, do: 0
+  defp shift(offset, _) when offset == nil, do: 0
   defp shift(offset, byte) when offset != nil, do: (offset - byte) * 8
 
-  defp parse_make_tag(<< x ::binary >>, offset, length) do
-    << _ :: size(offset), string :: size(length), _ :: binary >> = x
-    << string :: size(length) >> |> String.downcase
+  defp parse_make_tag(<< x ::binary >>, offset, len) do
+    << _ :: size(offset), make_tag :: size(len), _ :: binary >> = x
+    << make_tag :: size(len) >>
   end
 
   defp parse_flac(<<_x:: binary>>) do
