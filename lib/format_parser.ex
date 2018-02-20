@@ -32,7 +32,7 @@ defmodule FormatParser do
       <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
-      <<0x49, 0x49, 0x2A, 0x00, x :: binary>> -> parse_tif(x)
+      <<"II", 0x2A, 0x00, x :: binary>> -> parse_tif(x)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
