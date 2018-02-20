@@ -108,7 +108,8 @@ defmodule FormatParser do
     parse_ifds(ifd_left, Map.merge(ifd, accumulator))
   end
 
-  defp shift(offset, byte), do: unless offset == nil, do: (offset - byte) * 8, else: 0
+  defp shift(offset, byte) when offset == nil, do: 0
+  defp shift(offset, byte) when offset != nil, do: (offset - byte) * 8
 
   defp parse_make_tag(<< x ::binary >>, offset, length) do
     << _ :: size(offset), string :: size(length), _ :: binary >> = x
