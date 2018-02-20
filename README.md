@@ -82,6 +82,7 @@ match.format        #=> :ttf
 | png  | x      | x      | x     | x      |
 | psd  | x      | x      |       |        |
 | jb2  | x      | x      |       |        |
+| xcf  | x      | x      |       |        |
 
 ### Font
 
