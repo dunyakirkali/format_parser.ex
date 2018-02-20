@@ -17,6 +17,10 @@ defmodule FormatParser do
       iex> {:ok, file} = File.read("priv/test.jpg")
       iex> FormatParser.parse(file)
       %FormatParser.Image{format: :jpg, height_px: nil, nature: :image, width_px: nil}
+      
+      iex> {:ok, file} = File.read("priv/test.html")
+      iex> FormatParser.parse(file)
+      {:error, "Unknown"}
 
   """
   @spec parse(binary) :: struct
