@@ -3,11 +3,7 @@ defmodule FormatParser do
   The Format Parser
   """
 
-  alias FormatParser.Image
-  alias FormatParser.Video
-  alias FormatParser.Document
-  alias FormatParser.Audio
-  alias FormatParser.Font
+  alias FormatParser.{Image,Video,Document,Audio,Font}
 
   @doc """
   Parses the format of a given file. Or returs an error if unknown.
