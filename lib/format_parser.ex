@@ -1,12 +1,19 @@
 defmodule FormatParser do
   @moduledoc """
-  The Format Parser
+
+  FormatParser parses a binary file and extracts the format and some additional information from it.
+  It can deal with Audio, Video, Fonts, Images and Documents.
+
   """
 
   alias FormatParser.{Image,Video,Document,Audio,Font}
 
   @doc """
-  Parses the format of a given file. Or returs an error if unknown.
+
+  FormatParser.parse expects a binary file.
+  If the file is recognized then it will return a struct which contains all
+  information that has been extracted from the file.
+  If the file is not recognized then it will return `{:error, "Unknown"}`.
 
   ## Examples
 
