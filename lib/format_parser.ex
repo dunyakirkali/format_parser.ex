@@ -20,7 +20,7 @@ defmodule FormatParser do
 
   """
   @spec parse(binary) :: struct
-  def parse(file) do
+  def parse(file) when is_binary(file) do
     case file do
       <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, x :: binary>> -> parse_png(x)
       <<"BM", x :: binary>> -> parse_bmp(x)
