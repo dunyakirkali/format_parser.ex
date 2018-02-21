@@ -48,15 +48,15 @@ defmodule FormatParser do
       _ -> {:error, "Unknown"}
     end
   end
-  
+
   defp parse_exr(<<_ :: binary>>) do
     %Image{format: :exr}
   end
-  
+
   defp parse_xcf(<<_ :: binary>>) do
     %Image{format: :xcf}
   end
-  
+
   defp parse_jb2(<<_ :: binary>>) do
     %Image{format: :jb2}
   end
