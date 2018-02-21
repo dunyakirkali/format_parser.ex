@@ -90,7 +90,7 @@ defmodule FormatParser do
     height_px = if (height == 0), do: 256, else: height
     %Image{format: :ico, width_px: width_px, height_px: height_px}
   end
-  
+
   defp parse_cur(<<_ :: size(16), width :: size(8), height :: size(8), _ :: binary>>) do
     width_px = if (width == 0), do: 256, else: width
     height_px = if (height == 0), do: 256, else: height
