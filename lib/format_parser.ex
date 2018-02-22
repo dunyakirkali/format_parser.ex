@@ -14,6 +14,11 @@ defmodule FormatParser do
   If the file is recognized then it will return a struct which contains all
   information that has been extracted from the file.
   If the file is not recognized then it will return `{:error, "Unknown"}`.
+  
+  
+  ## Parameters
+
+    - binary: A binary file
 
   ## Examples
 
@@ -142,8 +147,8 @@ defmodule FormatParser do
     %Audio{format: :flac}
   end
 
-  defp parse_ogg(<<_ :: binary>>) do
-    %Audio{format: :ogg}
+  defp parse_ogg(<<_ :: size(280), channels :: little-integer-size(8), sample_rate_hz :: little-integer-size(32), _ :: binary>>) do
+    %Audio{format: :ogg, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
   end
 
   defp parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), _ :: binary>>) do
