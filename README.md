@@ -58,7 +58,7 @@ match.format              #=> :ttf
 | :---: | :----: | :----: | :---------: | :-----------: |
 | aiff  | x      | x      |             |               |
 | wav   | x      | x      | x           | x             |
-| ogg   | x      | x      |             |               |
+| ogg   | x      | x      | x           | x             |
 | flac  | x      | x      |             |               |
 
 ### Video
@@ -104,7 +104,7 @@ match.format              #=> :ttf
 ```elixir
 def deps do
   [
-    {:format_parser, "~> 0.9.1"}
+    {:format_parser, "~> 0.10.0"}
   ]
 end
 ```
