@@ -123,7 +123,7 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_tif(<< exif_offset :: big-integer-size(32), x :: binary >>, big_endian) do
+  defp parse_tif(<< exif_offset :: big-integer-size(32), x :: binary>>, big_endian) do
     exif = parse_exif(x, shift(exif_offset, 8), true)
     width = exif[256].value
     height = exif[257].value
@@ -132,9 +132,8 @@ defmodule FormatParser do
 
   defp parse_exif(<< x :: binary >>, offset, big_endian) do
     case big_endian do
-      false ->
-        << _ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary >> = x
-      true ->   << _ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
+      false -> <<_ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary>> = x
+      true -> <<_ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
     end
     ifds_sizes = ifd_count * 12 * 8
     << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
