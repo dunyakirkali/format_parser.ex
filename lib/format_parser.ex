@@ -40,6 +40,7 @@ defmodule FormatParser do
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
       <<"II", 0x2A, 0x00, x :: binary>> -> parse_tif(x)
+      <<"MM", 0x00, 0x2A, x :: binary>> -> parse_tif(x, true)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
@@ -115,6 +116,10 @@ defmodule FormatParser do
      Regex.match?(~r/nikon.+/i, make) -> %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
      make == "" -> %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
     end
+  end
+
+  defp parse_tif(<<_ :: binary>>, order) do
+    %Image{format: :tif}
   end
 
   defp parse_exif(<< x :: binary >>, offset) do
