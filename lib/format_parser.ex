@@ -123,7 +123,7 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_tif(<<_ :: binary>>, order) do
+  defp parse_tif(<<_ :: binary>>, big_endian) do
     %Image{format: :tif}
   end
 
