@@ -143,8 +143,8 @@ defmodule FormatParser do
     << make_tag :: size(len) >>
   end
 
-  defp parse_flac(<<_ :: binary>>) do
-    %Audio{format: :flac}
+  defp parse_flac(<<_ :: size(112), sample_rate_hz :: size(20), num_audio_channels :: size(3), _ :: size(5), _ :: size(36), _ :: binary>>) do
+    %Audio{format: :flac, sample_rate_hz: sample_rate_hz, num_audio_channels: num_audio_channels}
   end
 
   defp parse_ogg(<<_ :: size(280), channels :: little-integer-size(8), sample_rate_hz :: little-integer-size(32), _ :: binary>>) do

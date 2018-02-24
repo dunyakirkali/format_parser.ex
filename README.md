@@ -59,7 +59,7 @@ match.format              #=> :ttf
 | aiff  | x      | x      |             |               |
 | wav   | x      | x      | x           | x             |
 | ogg   | x      | x      | x           | x             |
-| flac  | x      | x      |             |               |
+| flac  | x      | x      | x           | x             |
 
 ### Video
 

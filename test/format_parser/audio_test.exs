@@ -33,8 +33,8 @@ defmodule FormatParser.AudioTest do
 
     assert FormatParser.parse(file).format == :flac
     assert FormatParser.parse(file).nature == :audio
-    # assert FormatParser.parse(file).sample_rate_hz == 48_000
-    # assert FormatParser.parse(file).num_audio_channels == 2
+    assert FormatParser.parse(file).sample_rate_hz == 96_000
+    assert FormatParser.parse(file).num_audio_channels == 1
   end
   
   test "mp3" do
