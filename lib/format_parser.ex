@@ -106,7 +106,7 @@ defmodule FormatParser do
   end
 
   defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
-    exif = parse_exif(x, shift(exif_offset, 8))
+    exif = parse_exif(x, shift(exif_offset, 8), false)
     width = exif[256]
     height = exif[257]
     make = parse_make_tag(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
@@ -118,21 +118,39 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_tif(<<_ :: binary>>, big_endian) do
-    %Image{format: :tif}
+  defp parse_tif(<< exif_offset :: big-integer-size(32), x :: binary >>, big_endian) do
+    exif = parse_exif(x, shift(exif_offset, 8), true)
+    width = exif[256].value
+    height = exif[257].value
+    %Image{format: :tif, width_px: width, height_px: height}
   end
 
-  defp parse_exif(<< x :: binary >>, offset) do
-    << _ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary >> = x
+  defp parse_exif(<< x :: binary >>, offset, big_endian) do
+    case big_endian do
+      false ->
+        << _ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary >> = x
+      true ->   << _ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
+    end
     ifds_sizes = ifd_count * 12 * 8
     << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
-    parse_ifds(<< ifd_set :: size(ifds_sizes) >>, %{})
+    parse_ifds(<< ifd_set :: size(ifds_sizes) >>, big_endian, %{})
   end
 
-  defp parse_ifds(<<>>, accumulator), do: accumulator
-  defp parse_ifds(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, accumulator) do
-    ifd = %{tag => %{tag: tag, length: length, value: value}}
-    parse_ifds(ifd_left, Map.merge(ifd, accumulator))
+  defp parse_ifds(<<>>, big_endian, accumulator), do: accumulator
+  defp parse_ifds(<<x :: binary >>, big_endian, accumulator) do
+    ifd = parse_ifd(<<x :: binary >>, big_endian)
+    parse_ifds(ifd.ifd_left, big_endian, Map.merge(ifd, accumulator))
+  end
+
+  defp parse_ifd(<<x :: binary>>, big_endian) do
+    case big_endian do
+      false ->
+        << tag :: little-integer-size(16), type :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >> = <<x :: binary>>
+      true ->
+        << tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >> = <<x :: binary>>
+        if type == 3, do: << value :: size(16), _ :: binary>> = << value :: size(32) >>
+    end
+    %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
   end
 
   defp shift(offset, _) when is_nil(offset), do: 0
