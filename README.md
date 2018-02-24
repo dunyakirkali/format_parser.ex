@@ -5,7 +5,8 @@
 [![Hex.pm version](https://img.shields.io/hexpm/v/format_parser.svg?style=flat-square)](https://hex.pm/packages/format_parser)
 [![Hex.pm downloads](https://img.shields.io/hexpm/dt/format_parser.svg)](https://hex.pm/packages/format_parser)
 
-FormatParser can be used to figure out the file type and format of a file as well as extracting some extra information about the file.
+FormatParser can be used to figure out the type and the format of a file.
+It also can extract some additional information.
 
 Documentation can be found [here](https://hexdocs.pm/format_parser).
 
