@@ -57,7 +57,7 @@ match.format              #=> :ttf
 
 | Type  | Nature | Format | Sample Rate | # of Channels |
 | :---: | :----: | :----: | :---------: | :-----------: |
-| aiff  | x      | x      |             |               |
+| aiff  | x      | x      |             | x             |
 | wav   | x      | x      | x           | x             |
 | ogg   | x      | x      | x           | x             |
 | flac  | x      | x      | x           | x             |
@@ -115,7 +115,7 @@ end
 - [ ] Parse width/height from `jpeg`, `exr`, `xcf` & `jb2`
 - [ ] Implement intrinsics for all
 - [ ] Split up Image, Audio, Video, Font & Document parsers to their own module
-- [ ] Get Sample Rate and # Of Channels from `aiff`
+- [ ] Get Sample Rate from `aiff`
 - [ ] Add support for big-endian tiff
 
 ## Contribute

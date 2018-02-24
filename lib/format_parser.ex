@@ -155,8 +155,8 @@ defmodule FormatParser do
     %Audio{format: :wav, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
   end
 
-  defp parse_aiff(<<_ :: size(56), "COMM", _ :: size(96), sample_rate_hz :: size(80), _ :: binary>>) do
-    %Audio{format: :aiff, sample_rate_hz: sample_rate_hz}
+  defp parse_aiff(<<_ :: size(56), "COMM", _ :: size(32), channels :: size(16), _ :: size(48), sample_rate_hz :: size(80), _ :: binary>>) do
+    %Audio{format: :aiff, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
   end
 
   defp parse_flv(<<_ :: binary>>) do
