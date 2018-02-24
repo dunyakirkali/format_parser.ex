@@ -96,6 +96,15 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).height_px == 2376
   end
 
+  test "tif big endian" do
+    {:ok, file} = File.read("priv/test2.tif")
+
+    assert FormatParser.parse(file).format == :tif
+    assert FormatParser.parse(file).nature == :image
+    assert FormatParser.parse(file).width_px == nil
+    assert FormatParser.parse(file).height_px == nil
+  end
+
   test "tif 2" do
     {:ok, file} = File.read("priv/test2.tif")
 
