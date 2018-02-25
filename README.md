@@ -113,7 +113,7 @@ end
 ## Roadmap
 
 - [ ] Parse width/height from `jpeg`, `exr`, `xcf` & `jb2`
-- [ ] Implement intrinsics for all
+- [x] Implement intrinsics
 - [ ] Split up Image, Audio, Video, Font & Document parsers to their own module
 - [ ] Get Sample Rate from `aiff`
 - [ ] Add support for big-endian tiff
