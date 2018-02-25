@@ -55,12 +55,12 @@ match.format              #=> :ttf
 
 ### Audio
 
-| Type  | Nature | Format | Sample Rate | # of Channels |
-| :---: | :----: | :----: | :---------: | :-----------: |
-| aiff  | x      | x      |             | x             |
-| wav   | x      | x      | x           | x             |
-| ogg   | x      | x      | x           | x             |
-| flac  | x      | x      | x           | x             |
+| Type  | Nature | Format | Sample Rate | # of Channels | Intrinsics                  |
+| :---: | :----: | :----: | :---------: | :-----------: | :-------------------------: |
+| aiff  | x      | x      |             | x             | num_frames, bits_per_sample |
+| wav   | x      | x      | x           | x             |                             |
+| ogg   | x      | x      | x           | x             |                             |
+| flac  | x      | x      | x           | x             |                             |
 
 ### Video
 
