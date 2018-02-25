@@ -56,7 +56,7 @@ match.format              #=> :ttf
 ### Audio
 
 | Type  | Nature | Format | Sample Rate | # of Channels | Intrinsics                              |
-| :---: | :----: | :----: | :---------: | :-----------: | :-------------------------------------: |
+| :---: | :----: | :----: | :---------: | :-----------: | :-------------------------------------- |
 | aiff  | x      | x      |             | x             | num_frames, bits_per_sample             |
 | wav   | x      | x      | x           | x             | byte_rate, block_align, bits_per_sample |
 | ogg   | x      | x      | x           | x             |                                         |
@@ -76,21 +76,21 @@ match.format              #=> :ttf
 
 ### Image
 
-| Type | Nature | Format | Width | Height |
-| :--: | :----: | :----: | :---: | :----: |
-| jpg  | x      | x      |       |        |
-| gif  | x      | x      | x     | x      |
-| ico  | x      | x      | x     | x      |
-| cur  | x      | x      | x     | x      |
-| cr2  | x      | x      | x     | x      |
-| nef  | x      | x      | x     | x      |
-| tif  | x      | x      | x     | x      |
-| bmp  | x      | x      | x     | x      |
-| png  | x      | x      | x     | x      |
-| psd  | x      | x      | x     | x      |
-| jb2  | x      | x      |       |        |
-| xcf  | x      | x      |       |        |
-| exr  | x      | x      |       |        |
+| Type | Nature | Format | Width | Height | Intrinsics                                                                      |
+| :--: | :----: | :----: | :---: | :----: | :------------------------------------------------------------------------------ |
+| jpg  | x      | x      |       |        |                                                                                 |
+| gif  | x      | x      | x     | x      |                                                                                 |
+| ico  | x      | x      | x     | x      |                                                                                 |
+| cur  | x      | x      | x     | x      |                                                                                 |
+| cr2  | x      | x      | x     | x      |                                                                                 |
+| nef  | x      | x      | x     | x      |                                                                                 |
+| tif  | x      | x      | x     | x      |                                                                                 |
+| bmp  | x      | x      | x     | x      |                                                                                 |
+| png  | x      | x      | x     | x      | bit_depth, color_type, compression_method, crc, filter_method, interlace_method |
+| psd  | x      | x      | x     | x      |                                                                                 |
+| jb2  | x      | x      |       |        |                                                                                 |
+| xcf  | x      | x      |       |        |                                                                                 |
+| exr  | x      | x      |       |        |                                                                                 |
 
 ### Font
 

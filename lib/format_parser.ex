@@ -176,8 +176,9 @@ defmodule FormatParser do
   defp parse_bmp(<< _ :: size(128), width :: little-integer-size(32), height :: little-integer-size(32), _ :: binary>>) do
     %Image{format: :bmp, width_px: width, height_px: height}
   end
-
-  defp parse_png(<< _ :: size(32), "IHDR", width :: size(32), height :: size(32), _ :: binary>>) do
-    %Image{format: :png, width_px: width, height_px: height}
+  
+  defp parse_png(<< _ :: size(32), "IHDR", width :: size(32), height :: size(32), bit_depth, color_type, compression_method, filter_method, interlace_method, crc :: size(32), chunks :: binary >>) do
+    intrinsics = %{bit_depth: bit_depth, color_type: color_type, compression_method: compression_method, filter_method: filter_method, interlace_method: interlace_method, crc: crc}
+    %Image{format: :png, width_px: width, height_px: height, intrinsics: intrinsics}
   end
 end

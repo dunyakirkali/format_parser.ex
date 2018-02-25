@@ -112,6 +112,7 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).nature == :image
     assert FormatParser.parse(file).width_px == 300
     assert FormatParser.parse(file).height_px == 300
+    assert FormatParser.parse(file).intrinsics == %{bit_depth: 8, color_type: 2, compression_method: 0, crc: 4129233186, filter_method: 0, interlace_method: 0}
   end
   
   test "psd" do
