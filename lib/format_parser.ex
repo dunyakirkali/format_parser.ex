@@ -110,11 +110,11 @@ defmodule FormatParser do
     %Image{format: :cur, width_px: width_px, height_px: height_px}
   end
 
-  defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
-    exif = parse_exif(x, shift(exif_offset, 8), false)
-    width = exif[256].value
-    height = exif[257].value
-    make = parse_make_tag(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
+  defp parse_tif(<< ifd0_offset :: little-integer-size(32), x :: binary >>) do
+    ifd_0 = parse_ifd0(x, shift(ifd0_offset, 8), false)
+    width = ifd_0[256].value
+    height = ifd_0[257].value
+    make = parse_make_tag(x, shift(ifd_0[271][:value], 8), shift(ifd_0[271][:length], 0))
 
     cond do
      Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width, height_px: height}
@@ -123,14 +123,14 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_tif(<< exif_offset :: big-integer-size(32), x :: binary>>, big_endian) do
-    exif = parse_exif(x, shift(exif_offset, 8), true)
-    width = exif[256].value
-    height = exif[257].value
+  defp parse_tif(<< ifd0_offset :: big-integer-size(32), x :: binary>>, big_endian) do
+    ifd_0 = parse_ifd0(x, shift(ifd0_offset, 8), true)
+    width = ifd_0[256].value
+    height = ifd_0[257].value
     %Image{format: :tif, width_px: width, height_px: height}
   end
 
-  defp parse_exif(<< x :: binary >>, offset, big_endian) do
+  defp parse_ifd0(<< x :: binary >>, offset, big_endian) do
     case big_endian do
       false -> <<_ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary>> = x
       true -> <<_ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
