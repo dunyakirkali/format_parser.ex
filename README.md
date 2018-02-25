@@ -80,8 +80,8 @@ match.format              #=> :ttf
 | :--: | :----: | :----: | :---: | :----: | :------------------------------------------------------------------------------ |
 | jpg  | x      | x      |       |        |                                                                                 |
 | gif  | x      | x      | x     | x      |                                                                                 |
-| ico  | x      | x      | x     | x      |                                                                                 |
-| cur  | x      | x      | x     | x      |                                                                                 |
+| ico  | x      | x      | x     | x      | num_color_palette, color_planes, bits_per_pixel                                 |
+| cur  | x      | x      | x     | x      | num_color_palette, hotspot_horizontal_coords, hotspot_vertical_coords           |
 | cr2  | x      | x      | x     | x      |                                                                                 |
 | nef  | x      | x      | x     | x      |                                                                                 |
 | tif  | x      | x      | x     | x      |                                                                                 |

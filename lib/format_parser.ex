@@ -97,16 +97,18 @@ defmodule FormatParser do
     %Document{format: :rtf}
   end
 
-  defp parse_ico(<<_ :: size(16), width :: size(8), height :: size(8), _ :: binary>>) do
+  defp parse_ico(<<_ :: size(16), width :: size(8), height :: size(8), num_color_palette :: size(8), 0x00, color_planes :: size(16), bits_per_pixel :: size(16), _ :: binary>>) do
     width_px = if (width == 0), do: 256, else: width
     height_px = if (height == 0), do: 256, else: height
-    %Image{format: :ico, width_px: width_px, height_px: height_px}
+    intrinsics = %{num_color_palette: num_color_palette, color_planes: color_planes, bits_per_pixel: bits_per_pixel}
+    %Image{format: :ico, width_px: width_px, height_px: height_px, intrinsics: intrinsics}
   end
 
-  defp parse_cur(<<_ :: size(16), width :: size(8), height :: size(8), _ :: binary>>) do
+  defp parse_cur(<<_ :: size(16), width :: size(8), height :: size(8), num_color_palette :: size(8), 0x00, hotspot_horizontal_coords :: size(16), hotspot_vertical_coords :: size(16), _ :: binary>>) do
     width_px = if (width == 0), do: 256, else: width
     height_px = if (height == 0), do: 256, else: height
-    %Image{format: :cur, width_px: width_px, height_px: height_px}
+    intrinsics = %{num_color_palette: num_color_palette, hotspot_horizontal_coords: hotspot_horizontal_coords, hotspot_vertical_coords: hotspot_vertical_coords}
+    %Image{format: :cur, width_px: width_px, height_px: height_px, intrinsics: intrinsics}
   end
 
   defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do

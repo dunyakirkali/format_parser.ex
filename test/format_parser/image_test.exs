@@ -76,6 +76,7 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).nature == :image
     assert FormatParser.parse(file).width_px == 256
     assert FormatParser.parse(file).height_px == 256
+    assert FormatParser.parse(file).intrinsics == %{num_color_palette: 0, color_planes: 256, bits_per_pixel: 8192}
   end
   
   test "cur" do
@@ -85,6 +86,7 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).nature == :image
     assert FormatParser.parse(file).width_px == 32
     assert FormatParser.parse(file).height_px == 32
+    assert FormatParser.parse(file).intrinsics == %{num_color_palette: 0, hotspot_horizontal_coords: 0, hotspot_vertical_coords: 0}
   end
   
   test "tif" do
