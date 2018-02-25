@@ -112,14 +112,14 @@ defmodule FormatParser do
 
   defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
     exif = parse_exif(x, shift(exif_offset, 8), false)
-    width = exif[256]
-    height = exif[257]
+    width = exif[256].value
+    height = exif[257].value
     make = parse_make_tag(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
 
     cond do
-     Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
-     Regex.match?(~r/nikon.+/i, make) -> %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
-     make == "" -> %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
+     Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width, height_px: height}
+     Regex.match?(~r/nikon.+/i, make) -> %Image{format: :nef, width_px: width, height_px: height}
+     make == "" -> %Image{format: :tif, width_px: width, height_px: height}
     end
   end
 
