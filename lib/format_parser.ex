@@ -151,8 +151,9 @@ defmodule FormatParser do
     %Audio{format: :ogg, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
   end
 
-  defp parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), _ :: binary>>) do
-    %Audio{format: :wav, sample_rate_hz: sample_rate_hz, num_audio_channels: channels}
+  defp parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), byte_rate :: little-integer-size(32), block_align :: little-integer-size(16), bits_per_sample :: little-integer-size(16), _ :: binary>>) do
+    intrinsics = %{byte_rate: byte_rate, block_align: block_align, bits_per_sample: bits_per_sample}
+    %Audio{format: :wav, sample_rate_hz: sample_rate_hz, num_audio_channels: channels, intrinsics: intrinsics}
   end
 
   defp parse_aiff(<<_ :: size(56), "COMM", _ :: size(32), channels :: size(16), frames :: size(32), bits_per_sample :: size(16), _sample_rate_components :: size(80), _ :: binary>>) do
