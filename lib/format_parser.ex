@@ -132,11 +132,15 @@ defmodule FormatParser do
     if Regex.match?(~r/nikon.+/i, make), do: %Image{format: :nef}, else: %Image{format: :tif, width_px: width, height_px: height}
   end
 
-  defp parse_ifd0(<< x :: binary >>, offset, big_endian) do
-    case big_endian do
-      false -> <<_ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary>> = x
-      true -> <<_ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
-    end
+  defp parse_ifd0(<< x :: binary >>, offset, big_endian)  when big_endian == false do
+    <<_ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary>> = x
+    ifds_sizes = ifd_count * 12 * 8
+    << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
+    parse_ifds(<< ifd_set :: size(ifds_sizes) >>, big_endian, %{})
+  end
+  
+  defp parse_ifd0(<< x :: binary >>, offset, big_endian)  when big_endian == true do
+    <<_ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
     ifds_sizes = ifd_count * 12 * 8
     << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
     parse_ifds(<< ifd_set :: size(ifds_sizes) >>, big_endian, %{})
@@ -147,15 +151,18 @@ defmodule FormatParser do
     ifd = parse_ifd(<<x :: binary >>, big_endian)
     parse_ifds(ifd.ifd_left, big_endian, Map.merge(ifd, accumulator))
   end
+  
+  defp parse_ifd(<<x :: binary>>, big_endian) when big_endian == false do
+    << tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >> = x
+    %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
+  end
 
-  defp parse_ifd(<<x :: binary>>, big_endian) do
-    case big_endian do
-      false ->
-        << tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >> = x
-      true ->
-        << tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >> = x
-        if type == 3, do: << value :: size(16), _ :: binary>> = << value :: size(32) >>
-    end
+  defp parse_ifd(<< tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >>, big_endian) when big_endian == true and type != 3 do
+    %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
+  end
+  
+  defp parse_ifd(<< tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >>, big_endian) when big_endian == true and type == 3 do
+    << value :: size(16), _ :: binary>> = << value :: size(32) >>
     %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
   end
 
