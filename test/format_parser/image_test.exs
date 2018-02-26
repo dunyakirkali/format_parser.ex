@@ -6,8 +6,6 @@ defmodule FormatParser.ImageTest do
 
     assert FormatParser.parse(file).format == :jpg
     assert FormatParser.parse(file).nature == :image
-    # assert FormatParser.parse(file).width_px == 313
-    # assert FormatParser.parse(file).height_px == 234
   end
   
   test "jb2" do
@@ -15,8 +13,6 @@ defmodule FormatParser.ImageTest do
 
     assert FormatParser.parse(file).format == :jb2
     assert FormatParser.parse(file).nature == :image
-    # assert FormatParser.parse(file).width_px == 313
-    # assert FormatParser.parse(file).height_px == 234
   end
   
   test "xcf" do

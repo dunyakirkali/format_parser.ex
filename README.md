@@ -16,38 +16,39 @@ Inspired heavily by [format_parser](https://github.com/WeTransfer/format_parser/
 
 ```elixir
 # Image
-{:ok, file} = File.read("myimage.gif")
+{:ok, file} = File.read("myimage.png")
 match = FormatParser.parse(file)
-match.nature              #=> :image
-match.format              #=> :gif
-match.width_px            #=> 256
-match.height_px           #=> 256
+match.nature                      #=> :image
+match.format                      #=> :gif
+match.width_px                    #=> 256
+match.height_px                   #=> 256
+match.intrinsics[:filter_method]  #=> 0
 
 # Video
 {:ok, file} = File.read("myvideo.flv")
 match = FormatParser.parse(file)
-match.nature              #=> :video
-match.format              #=> :flv
+match.nature                      #=> :video
+match.format                      #=> :flv
 
 # Document
 {:ok, file} = File.read("mydocument.rtf")
 match = FormatParser.parse(file)
-match.nature              #=> :document
-match.format              #=> :rtf
+match.nature                      #=> :document
+match.format                      #=> :rtf
 
 # Audio
 {:ok, file} = File.read("myaudio.wav")
 match = FormatParser.parse(file)
-match.nature              #=> :audio
-match.format              #=> :wav
-match.sample_rate_hz      #=> 44100
-match.num_audio_channels  #=> 2
+match.nature                      #=> :audio
+match.format                      #=> :wav
+match.sample_rate_hz              #=> 44100
+match.num_audio_channels          #=> 2
 
 # Font
 {:ok, file} = File.read("myfont.ttf")
 match = FormatParser.parse(file)
-match.nature              #=> :font
-match.format              #=> :ttf
+match.nature                      #=> :font
+match.format                      #=> :ttf
 
 ```
 

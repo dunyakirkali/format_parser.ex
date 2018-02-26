@@ -6,7 +6,5 @@ defmodule FormatParser.VideoTest do
 
     assert FormatParser.parse(file).format == :flv
     assert FormatParser.parse(file).nature == :video
-    # assert FormatParser.parse(file).width_px == 360
-    # assert FormatParser.parse(file).height_px == 288
   end
 end
