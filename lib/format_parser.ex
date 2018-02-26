@@ -124,7 +124,7 @@ defmodule FormatParser do
     end
   end
 
-  defp parse_tif(<< ifd0_offset :: big-integer-size(32), x :: binary>>, big_endian) do
+  defp parse_tif(<< ifd0_offset :: big-integer-size(32), x :: binary>>, _) do
     ifd_0 = parse_ifd0(x, shift(ifd0_offset, 8), true)
     width = ifd_0[256].value
     height = ifd_0[257].value
@@ -142,7 +142,7 @@ defmodule FormatParser do
     parse_ifds(<< ifd_set :: size(ifds_sizes) >>, big_endian, %{})
   end
 
-  defp parse_ifds(<<>>, big_endian, accumulator), do: accumulator
+  defp parse_ifds(<<>>, _, accumulator), do: accumulator
   defp parse_ifds(<<x :: binary >>, big_endian, accumulator) do
     ifd = parse_ifd(<<x :: binary >>, big_endian)
     parse_ifds(ifd.ifd_left, big_endian, Map.merge(ifd, accumulator))
@@ -201,7 +201,7 @@ defmodule FormatParser do
     %Image{format: :bmp, width_px: width, height_px: height}
   end
   
-  defp parse_png(<< _ :: size(32), "IHDR", width :: size(32), height :: size(32), bit_depth, color_type, compression_method, filter_method, interlace_method, crc :: size(32), chunks :: binary >>) do
+  defp parse_png(<< _ :: size(32), "IHDR", width :: size(32), height :: size(32), bit_depth, color_type, compression_method, filter_method, interlace_method, crc :: size(32), _ :: binary >>) do
     intrinsics = %{bit_depth: bit_depth, color_type: color_type, compression_method: compression_method, filter_method: filter_method, interlace_method: interlace_method, crc: crc}
     %Image{format: :png, width_px: width, height_px: height, intrinsics: intrinsics}
   end
