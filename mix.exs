@@ -4,7 +4,7 @@ defmodule FormatParser.Mixfile do
   def project do
     [
       app: :format_parser,
-      version: "0.12.0",
+      version: "1.0.0",
       elixir: "~> 1.3",
       start_permanent: Mix.env == :prod,
       deps: deps(),

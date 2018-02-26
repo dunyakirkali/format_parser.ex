@@ -103,13 +103,17 @@ match.format                      #=> :ttf
 
 ## Installation
 
+Add the following to your `mix.exs` file
+
 ```elixir
 def deps do
   [
-    {:format_parser, "~> 0.12.0"}
+    {:format_parser, "~> 1.0.0"}
   ]
 end
 ```
+
+And run `mix deps.get`
 
 ## Contribute
 
