@@ -152,8 +152,7 @@ defmodule FormatParser do
     parse_ifds(ifd.ifd_left, big_endian, Map.merge(ifd, accumulator))
   end
   
-  defp parse_ifd(<<x :: binary>>, big_endian) when big_endian == false do
-    << tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >> = x
+  defp parse_ifd(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, big_endian) when big_endian == false do
     %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
   end
 
