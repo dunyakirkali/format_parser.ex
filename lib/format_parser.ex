@@ -127,7 +127,8 @@ defmodule FormatParser do
     ifd_0 = parse_ifd0(x, shift(ifd0_offset, 8), true)
     width = ifd_0[256].value
     height = ifd_0[257].value
-    %Image{format: :tif, width_px: width, height_px: height}
+    make = parse_make_tag(x, shift(ifd_0[271][:value], 8), shift(ifd_0[271][:length], 0))
+    if Regex.match?(~r/nikon.+/i, make), do: %Image{format: :nef}, else: %Image{format: :tif, width_px: width, height_px: height}
   end
 
   defp parse_ifd0(<< x :: binary >>, offset, big_endian) do
