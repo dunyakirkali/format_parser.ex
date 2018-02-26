@@ -110,14 +110,6 @@ def deps do
 end
 ```
 
-## Roadmap
-
-- [ ] Parse width/height from `jpeg`, `exr`, `xcf` & `jb2`
-- [x] Implement intrinsics
-- [ ] Split up Image, Audio, Video, Font & Document parsers to their own module
-- [ ] Get Sample Rate from `aiff`
-- [ ] Add support for big-endian tiff
-
 ## Contribute
 
 Please feel free to fork and send us a PR or open up an issue.
