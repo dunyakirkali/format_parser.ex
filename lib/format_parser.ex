@@ -45,6 +45,7 @@ defmodule FormatParser do
       <<"GIF87a", x :: binary>> -> parse_gif(x)
       <<0xFF, 0xD8, 0xFF, x :: binary>> -> parse_jpeg(x)
       <<"II", 0x2A, 0x00, x :: binary>> -> parse_tif(x)
+      <<"MM", 0x00, 0x2A, x :: binary>> -> parse_tif(x, true)
       <<0x00, 0x00, 0x01, 0x00, x :: binary>> -> parse_ico(x)
       <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
@@ -110,30 +111,52 @@ defmodule FormatParser do
     %Image{format: :cur, width_px: width_px, height_px: height_px, intrinsics: intrinsics}
   end
 
-  defp parse_tif(<< exif_offset :: little-integer-size(32), x :: binary >>) do
-    exif = parse_exif(x, shift(exif_offset, 8))
-    width = exif[256]
-    height = exif[257]
-    make = parse_make_tag(x, shift(exif[271][:value], 8), shift(exif[271][:length], 0))
+  defp parse_tif(<< ifd0_offset :: little-integer-size(32), x :: binary >>) do
+    ifd_0 = parse_ifd0(x, shift(ifd0_offset, 8), false)
+    width = ifd_0[256].value
+    height = ifd_0[257].value
+    make = parse_make_tag(x, shift(ifd_0[271][:value], 8), shift(ifd_0[271][:length], 0))
 
     cond do
-     Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width[:value], height_px: height[:value]}
-     Regex.match?(~r/nikon.+/i, make) -> %Image{format: :nef, width_px: width[:value], height_px: height[:value]}
-     make == "" -> %Image{format: :tif, width_px: width[:value], height_px: height[:value]}
+     Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width, height_px: height}
+     Regex.match?(~r/nikon.+/i, make) -> %Image{format: :nef, width_px: width, height_px: height}
+     make == "" -> %Image{format: :tif, width_px: width, height_px: height}
     end
   end
 
-  defp parse_exif(<< x :: binary >>, offset) do
-    << _ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary >> = x
-    ifds_sizes = ifd_count * 12 * 8
-    << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
-    parse_ifds(<< ifd_set :: size(ifds_sizes) >>, %{})
+  defp parse_tif(<< ifd0_offset :: big-integer-size(32), x :: binary>>, big_endian) do
+    ifd_0 = parse_ifd0(x, shift(ifd0_offset, 8), true)
+    width = ifd_0[256].value
+    height = ifd_0[257].value
+    make = parse_make_tag(x, shift(ifd_0[271][:value], 8), shift(ifd_0[271][:length], 0))
+    if Regex.match?(~r/nikon.+/i, make), do: %Image{format: :nef}, else: %Image{format: :tif, width_px: width, height_px: height}
   end
 
-  defp parse_ifds(<<>>, accumulator), do: accumulator
-  defp parse_ifds(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, accumulator) do
-    ifd = %{tag => %{tag: tag, length: length, value: value}}
-    parse_ifds(ifd_left, Map.merge(ifd, accumulator))
+  defp parse_ifd0(<< x :: binary >>, offset, big_endian) do
+    case big_endian do
+      false -> <<_ :: size(offset), ifd_count :: little-integer-size(16), rest :: binary>> = x
+      true -> <<_ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
+    end
+    ifds_sizes = ifd_count * 12 * 8
+    << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
+    parse_ifds(<< ifd_set :: size(ifds_sizes) >>, big_endian, %{})
+  end
+
+  defp parse_ifds(<<>>, big_endian, accumulator), do: accumulator
+  defp parse_ifds(<<x :: binary >>, big_endian, accumulator) do
+    ifd = parse_ifd(<<x :: binary >>, big_endian)
+    parse_ifds(ifd.ifd_left, big_endian, Map.merge(ifd, accumulator))
+  end
+
+  defp parse_ifd(<<x :: binary>>, big_endian) do
+    case big_endian do
+      false ->
+        << tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >> = <<x :: binary>>
+      true ->
+        << tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >> = <<x :: binary>>
+        if type == 3, do: << value :: size(16), _ :: binary>> = << value :: size(32) >>
+    end
+    %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
   end
 
   defp shift(offset, _) when is_nil(offset), do: 0
