@@ -49,7 +49,6 @@ defmodule FormatParser do
       <<0x00, 0x00, 0x02, 0x00, x :: binary>> -> parse_cur(x)
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
       <<0x00, 0x01, 0x00, 0x00, 0x00, x :: binary>> -> parse_ttf(x)
-      <<"true", 0x00, x :: binary>> -> parse_ttf(x)
       <<"OTTO", 0x00, x :: binary>> -> parse_otf(x)
       <<"ID3", x :: binary>> -> parse_mp3(x)
       <<"8BPS", x :: binary>> -> parse_psd(x)
