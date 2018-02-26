@@ -151,9 +151,9 @@ defmodule FormatParser do
   defp parse_ifd(<<x :: binary>>, big_endian) do
     case big_endian do
       false ->
-        << tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >> = <<x :: binary>>
+        << tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >> = x
       true ->
-        << tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >> = <<x :: binary>>
+        << tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >> = x
         if type == 3, do: << value :: size(16), _ :: binary>> = << value :: size(32) >>
     end
     %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
