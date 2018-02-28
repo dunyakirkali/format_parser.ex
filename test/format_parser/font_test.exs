@@ -1,5 +1,15 @@
 defmodule FormatParser.FontTest do
   use ExUnit.Case
+  
+  test "parse passed error" do
+    {:ok, file} = File.read("priv/test.ttf")
+
+    assert FormatParser.Font.parse({:error, file}).format == :ttf
+  end
+  
+  test "route passed result" do
+    assert FormatParser.Document.parse(%FormatParser.Audio{}) == %FormatParser.Audio{}
+  end
 
   test "ttf" do
     {:ok, file} = File.read("priv/test.ttf")

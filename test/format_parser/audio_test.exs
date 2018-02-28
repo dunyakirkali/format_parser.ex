@@ -1,6 +1,16 @@
 defmodule FormatParser.AudioTest do
   use ExUnit.Case
   
+  test "parse passed error" do
+    {:ok, file} = File.read("priv/test.aiff")
+
+    assert FormatParser.Audio.parse({:error, file}).format == :aiff
+  end
+  
+  test "route passed result" do
+    assert FormatParser.Document.parse(%FormatParser.Video{}) == %FormatParser.Video{}
+  end
+  
   test "aiff" do
     {:ok, file} = File.read("priv/test.aiff")
 
