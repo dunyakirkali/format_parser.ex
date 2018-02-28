@@ -83,8 +83,8 @@ match.format                      #=> :ttf
 | gif  | x      | x      | x     | x      |                                                                                 |
 | ico  | x      | x      | x     | x      | num_color_palette, color_planes, bits_per_pixel                                 |
 | cur  | x      | x      | x     | x      | num_color_palette, hotspot_horizontal_coords, hotspot_vertical_coords           |
-| cr2  | x      | x      | x     | x      |                                                                                 |
-| nef  | x      | x      | x     | x      |                                                                                 |
+| cr2  | x      | x      | x     | x      | date_time, model, preview_byte_count, preview_offset                            |
+| nef  | x      | x      | x     | x      | date_time, model, preview_byte_count, preview_offset                            |
 | tif  | x      | x      | x     | x      |                                                                                 |
 | bmp  | x      | x      | x     | x      |                                                                                 |
 | png  | x      | x      | x     | x      | bit_depth, color_type, compression_method, crc, filter_method, interlace_method |
