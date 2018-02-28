@@ -116,6 +116,8 @@ defmodule FormatParser do
     width = ifd_0[256].value
     height = ifd_0[257].value
     make = parse_make_tag(x, shift(ifd_0[271][:value], 8), shift(ifd_0[271][:length], 0))
+    model = parse_make_tag(x, shift(ifd_0[272][:value], 8), shift(ifd_0[272][:length], 0))
+    date_time = parse_make_tag(x, shift(ifd_0[306][:value], 8), shift(ifd_0[306][:length], 0))
 
     cond do
      Regex.match?(~r/canon.+/i, make) -> %Image{format: :cr2, width_px: width, height_px: height}
