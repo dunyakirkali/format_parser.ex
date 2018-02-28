@@ -7,8 +7,14 @@ defmodule FormatParser.FontTest do
     assert FormatParser.Font.parse({:error, file}).format == :ttf
   end
   
+  test "parse file" do
+    {:ok, file} = File.read("priv/test.ttf")
+
+    assert FormatParser.Font.parse(file).format == :ttf
+  end
+  
   test "route passed result" do
-    assert FormatParser.Document.parse(%FormatParser.Audio{}) == %FormatParser.Audio{}
+    assert FormatParser.Font.parse(%FormatParser.Audio{}) == %FormatParser.Audio{}
   end
 
   test "ttf" do

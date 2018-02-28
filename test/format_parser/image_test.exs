@@ -7,6 +7,12 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.Image.parse({:error, file}).format == :jpg
   end
   
+  test "parse file" do
+    {:ok, file} = File.read("priv/test.jpg")
+
+    assert FormatParser.Image.parse(file).format == :jpg
+  end
+  
   test "route passed result" do
     assert FormatParser.Document.parse(%FormatParser.Font{}) == %FormatParser.Font{}
   end

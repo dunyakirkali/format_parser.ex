@@ -7,6 +7,12 @@ defmodule FormatParser.DocumentTest do
     assert FormatParser.Document.parse({:error, file}).format == :rtf
   end
   
+  test "parse file" do
+    {:ok, file} = File.read("priv/test.rtf")
+
+    assert FormatParser.Document.parse(file).format == :rtf
+  end
+  
   test "route passed result" do
     assert FormatParser.Document.parse(%FormatParser.Audio{}) == %FormatParser.Audio{}
   end
