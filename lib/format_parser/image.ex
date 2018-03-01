@@ -8,29 +8,29 @@ defmodule FormatParser.Image do
   """
 
   defstruct [:format, :width_px, :height_px, nature: :image, intrinsics: %{}]
-  
+
   @doc """
   Parses a file and extracts some information from it.
 
   Takes a `binary file` as argument.
-  
+
   Returns a struct which contains all information that has been extracted from the file if the file is recognized.
-  
+
   Returns the following tuple if file not recognized: `{:error, file}`.
 
   """
   def parse({:error, file}) when is_binary(file) do
     parse_image(file)
   end
-  
+
   def parse(file) when is_binary(file) do
     parse_image(file)
   end
-  
+
   def parse(result) do
     result
   end
-  
+
   defp parse_image(file) do
     case file do
       <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, x :: binary>> -> parse_png(x)
@@ -49,7 +49,7 @@ defmodule FormatParser.Image do
       _ -> {:error, file}
     end
   end
-  
+
   defp parse_exr(<<_ :: binary>>) do
     %Image{format: :exr}
   end
@@ -107,7 +107,7 @@ defmodule FormatParser.Image do
     << ifd_set :: size(ifds_sizes), _ :: binary >> = rest
     parse_ifds(<< ifd_set :: size(ifds_sizes) >>, big_endian, %{})
   end
-  
+
   defp parse_ifd0(<< x :: binary >>, offset, big_endian)  when big_endian == true do
     <<_ :: size(offset), ifd_count :: size(16), rest :: binary >> = x
     ifds_sizes = ifd_count * 12 * 8
@@ -120,7 +120,7 @@ defmodule FormatParser.Image do
     ifd = parse_ifd(<<x :: binary >>, big_endian)
     parse_ifds(ifd.ifd_left, big_endian, Map.merge(ifd, accumulator))
   end
-  
+
   defp parse_ifd(<< tag :: little-integer-size(16), _ :: little-integer-size(16), length :: little-integer-size(32), value :: little-integer-size(32), ifd_left :: binary >>, big_endian) when big_endian == false do
     %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
   end
@@ -128,7 +128,7 @@ defmodule FormatParser.Image do
   defp parse_ifd(<< tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >>, big_endian) when big_endian == true and type != 3 do
     %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
   end
-  
+
   defp parse_ifd(<< tag :: size(16), type :: size(16), length :: size(32), value :: size(32), ifd_left :: binary >>, big_endian) when big_endian == true and type == 3 do
     << value :: size(16), _ :: binary>> = << value :: size(32) >>
     %{tag => %{tag: tag, length: length, value: value}, ifd_left: ifd_left}
@@ -153,7 +153,7 @@ defmodule FormatParser.Image do
   defp parse_bmp(<< _ :: size(128), width :: little-integer-size(32), height :: little-integer-size(32), _ :: binary>>) do
     %Image{format: :bmp, width_px: width, height_px: height}
   end
-  
+
   defp parse_png(<< _ :: size(32), "IHDR", width :: size(32), height :: size(32), bit_depth, color_type, compression_method, filter_method, interlace_method, crc :: size(32), _ :: binary >>) do
     intrinsics = %{bit_depth: bit_depth, color_type: color_type, compression_method: compression_method, filter_method: filter_method, interlace_method: interlace_method, crc: crc}
     %Image{format: :png, width_px: width, height_px: height, intrinsics: intrinsics}
