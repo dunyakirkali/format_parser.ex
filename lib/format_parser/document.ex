@@ -7,7 +7,7 @@ defmodule FormatParser.Document do
   The Document struct contains the fields format and nature.
   """
 
-  defstruct [:format, nature: :document]
+  defstruct [:format, nature: :document, intrinsics: %{}]
 
   @doc """
   Parses a file and extracts some information from it.
@@ -43,7 +43,8 @@ defmodule FormatParser.Document do
     %Document{format: :rtf}
   end
 
-  defp parse_pdf(<<_x :: binary>>) do
-    %Document{format: :pdf}
+  defp parse_pdf(<<x :: binary>>) do
+    page_count = Regex.run(~r/<<\/Linearized.+\/N\s([0-9]+)/, x) |> List.last |> String.to_integer
+    %Document{format: :pdf, intrinsics: %{page_count: page_count}}
   end
 end

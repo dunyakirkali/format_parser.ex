@@ -29,5 +29,6 @@ defmodule FormatParser.DocumentTest do
 
     assert FormatParser.parse(file).format == :pdf
     assert FormatParser.parse(file).nature == :document
+    assert FormatParser.parse(file).intrinsics[:page_count] == 1
   end
 end
