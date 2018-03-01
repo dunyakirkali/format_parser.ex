@@ -70,6 +70,7 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).nature == :image
     assert FormatParser.parse(file).width_px == 2496
     assert FormatParser.parse(file).height_px == 1664
+    assert FormatParser.parse(file).intrinsics == %{preview_offset: 82426, preview_byte_count: 733952, model: "Canon EOS 5D" <> <<0>>, date_time: "2006:01:15 19:04:48" <> <<0>>}
   end
 
   test "nef" do
@@ -79,6 +80,7 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).nature == :image
     assert FormatParser.parse(file).width_px == 212
     assert FormatParser.parse(file).height_px == 320
+    assert FormatParser.parse(file).intrinsics == %{preview_offset: 25370, preview_byte_count: 203520, model: "NIKON D70" <> <<0>>, date_time: "2008:06:01 02:12:-1468006400" <> <<0>>}
   end
 
   test "nef big endian" do

@@ -107,12 +107,38 @@ defmodule FormatParser.Image do
       shift(ifd_0[271][:value], 8),
       shift(ifd_0[271][:length], 0)
     )
+    model = parse_make_tag(
+      x,
+      shift(ifd_0[272][:value], 8),
+      shift(ifd_0[272][:length], 0)
+    )
+    date_time = parse_make_tag(
+      x,
+      shift(ifd_0[306][:value], 8),
+      shift(ifd_0[306][:length], 0)
+    )
+    intrinsics = %{
+      preview_offset: ifd_0[273].value,
+      preview_byte_count: ifd_0[279].value,
+      model: model,
+      date_time: date_time
+    }
 
     cond do
      Regex.match?(~r/canon.+/i, make) ->
-       %Image{format: :cr2, width_px: width, height_px: height}
+       %Image{
+         format: :cr2,
+         width_px: width,
+         height_px: height,
+         intrinsics: intrinsics
+       }
      Regex.match?(~r/nikon.+/i, make) ->
-       %Image{format: :nef, width_px: width, height_px: height}
+       %Image{
+         format: :nef,
+         width_px: width,
+         height_px: height,
+         intrinsics: intr  insics
+       }
      make == "" -> %Image{format: :tif, width_px: width, height_px: height}
     end
   end
