@@ -137,7 +137,7 @@ defmodule FormatParser.Image do
          format: :nef,
          width_px: width,
          height_px: height,
-         intrinsics: intr  insics
+         intrinsics: intrinsics
        }
      make == "" -> %Image{format: :tif, width_px: width, height_px: height}
     end
