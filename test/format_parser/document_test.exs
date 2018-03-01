@@ -25,10 +25,13 @@ defmodule FormatParser.DocumentTest do
   end
 
   test "pdf" do
-    {:ok, file} = File.read("priv/test.pdf")
+    Path.wildcard("priv/pdf/*.pdf")
+    |> Enum.each(fn(x) ->
+      {:ok, file} = File.read(x)
 
-    assert FormatParser.parse(file).format == :pdf
-    assert FormatParser.parse(file).nature == :document
-    assert FormatParser.parse(file).intrinsics[:page_count] == 1
+      assert FormatParser.parse(file).format == :pdf
+      assert FormatParser.parse(file).nature == :document
+      assert FormatParser.parse(file).intrinsics[:page_count] == 1
+    end)
   end
 end
