@@ -73,8 +73,8 @@ match.format                      #=> :ttf
 
 | Type | Nature | Format | Intrinsics |
 | :--: | :----: | :----: | :--------- |
-| rtf  | x      | x      | page_count |
-| pdf  | x      | x      |            |
+| rtf  | x      | x      |            |
+| pdf  | x      | x      | page_count |
 
 ### Image
 
