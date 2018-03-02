@@ -71,9 +71,10 @@ match.format                      #=> :ttf
 
 ### Document
 
-| Type | Nature | Format |
-| :--: | :----: | :----: |
-| rtf  | x      | x      |
+| Type | Nature | Format | Intrinsics |
+| :--: | :----: | :----: | :--------- |
+| rtf  | x      | x      | page_count |
+| pdf  | x      | x      |            |
 
 ### Image
 
