@@ -44,7 +44,12 @@ defmodule FormatParser.Document do
   end
 
   defp parse_pdf(<<x :: binary>>) do
-    page_count = Regex.run(~r/<<\/Linearized.+\/N\s([0-9]+)/, x) |> List.last |> String.to_integer
+    page_count =
+      case Regex.run(~r/<<\/Linearized.+\/N\s([0-9]+)/, x) do
+        nil -> 0
+        match -> match |> List.last() |> String.to_integer()
+      end
+
     %Document{format: :pdf, intrinsics: %{page_count: page_count}}
   end
 end
