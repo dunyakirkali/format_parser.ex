@@ -1,6 +1,7 @@
 # FormatParser
 
-[![Build Status](https://travis-ci.org/ahtung/format_parser.ex.svg?branch=master)](https://travis-ci.org/ahtung/format_parser.ex)
+![Code Quality](https://github.com/ahtung/format_parser.ex/workflows/Code%20Quality/badge.svg)
+![Continuous Integration](https://github.com/ahtung/format_parser.ex/workflows/Continuous%20Integration/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/ahtung/format_parser.ex/badge.svg?branch=master)](https://coveralls.io/r/ahtung/format_parser.ex?branch=master)
 [![Hex.pm version](https://img.shields.io/hexpm/v/format_parser.svg?style=flat-square)](https://hex.pm/packages/format_parser)
 [![Hex.pm downloads](https://img.shields.io/hexpm/dt/format_parser.svg)](https://hex.pm/packages/format_parser)
