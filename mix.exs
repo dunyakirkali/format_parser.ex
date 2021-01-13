@@ -27,7 +27,9 @@ defmodule FormatParser.Mixfile do
     [
       {:excoveralls, "~> 0.8.1", only: :test},
       {:ex_doc, "~> 0.23.0", only: :dev},
-      {:credo, "~> 0.8.10", only: [:dev, :test], runtime: false}
+      {:credo, "~> 0.8.10", only: [:dev, :test], runtime: false},
+      {:doctor, "~> 0.17.0", only: :dev},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
 
@@ -46,5 +48,11 @@ defmodule FormatParser.Mixfile do
     """
     The owls are not what they seem
     """
+  end
+
+  defp aliases do
+    [
+      code_quality: ["credo --strict", "dialyzer", "doctor"]
+    ]
   end
 end
