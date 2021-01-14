@@ -13,9 +13,9 @@ defmodule FormatParser do
   Parses a file and extracts some information from it.
 
   Takes a `binary file` as argument.
-  
+
   Returns a struct which contains all information that has been extracted from the file if the file is recognized.
-  
+
   Returns the following tuple if file not recognized: `{:error, "Unknown"}`.
 
   ## Examples
@@ -32,14 +32,14 @@ defmodule FormatParser do
   @spec parse(binary) :: struct
   def parse(file) when is_binary(file) do
     file
-    |> Font.parse
-    |> Audio.parse
-    |> Document.parse
-    |> Video.parse
-    |> Image.parse
+    |> Font.parse()
+    |> Audio.parse()
+    |> Document.parse()
+    |> Video.parse()
+    |> Image.parse()
     |> case do
-         {:error, _} -> {:error, "Unknown"}
-         result -> result
-       end
+      {:error, _} -> {:error, "Unknown"}
+      result -> result
+    end
   end
 end

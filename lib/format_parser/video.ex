@@ -33,12 +33,12 @@ defmodule FormatParser.Video do
 
   defp parse_video(file) do
     case file do
-      <<"FLV", 0x01, x :: binary>> -> parse_flv(x)
+      <<"FLV", 0x01, x::binary>> -> parse_flv(x)
       _ -> {:error, file}
     end
   end
 
-  defp parse_flv(<<_ :: binary>>) do
+  defp parse_flv(<<_::binary>>) do
     %Video{format: :flv}
   end
 end

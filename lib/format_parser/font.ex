@@ -33,22 +33,22 @@ defmodule FormatParser.Font do
 
   defp parse_font(file) do
     case file do
-      <<0x4d, 0x5A, x :: binary>> -> parse_fon(x)
-      <<0x00, 0x01, 0x00, 0x00, 0x00, x :: binary>> -> parse_ttf(x)
-      <<"OTTO", 0x00, x :: binary>> -> parse_otf(x)
+      <<0x4D, 0x5A, x::binary>> -> parse_fon(x)
+      <<0x00, 0x01, 0x00, 0x00, 0x00, x::binary>> -> parse_ttf(x)
+      <<"OTTO", 0x00, x::binary>> -> parse_otf(x)
       _ -> {:error, file}
     end
   end
 
-  defp parse_otf(<<_ :: binary>>) do
+  defp parse_otf(<<_::binary>>) do
     %Font{format: :otf}
   end
 
-  defp parse_ttf(<<_x :: binary>>) do
+  defp parse_ttf(<<_x::binary>>) do
     %Font{format: :ttf}
   end
 
-  defp parse_fon(<<_ :: binary>>) do
+  defp parse_fon(<<_::binary>>) do
     %Font{format: :fon}
   end
 end

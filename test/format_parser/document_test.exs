@@ -26,7 +26,7 @@ defmodule FormatParser.DocumentTest do
 
   test "pdf" do
     Path.wildcard("priv/pdf/*.pdf")
-    |> Enum.each(fn(x) ->
+    |> Enum.each(fn x ->
       {:ok, file} = File.read(x)
 
       assert FormatParser.parse(file).format == :pdf

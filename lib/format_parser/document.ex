@@ -33,17 +33,17 @@ defmodule FormatParser.Document do
 
   defp parse_document(file) do
     case file do
-      <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x :: binary>> -> parse_rtf(x)
-      <<"%PDF", x :: binary>> -> parse_pdf(x)
+      <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x::binary>> -> parse_rtf(x)
+      <<"%PDF", x::binary>> -> parse_pdf(x)
       _ -> {:error, file}
     end
   end
 
-  defp parse_rtf(<<_x :: binary>>) do
+  defp parse_rtf(<<_x::binary>>) do
     %Document{format: :rtf}
   end
 
-  defp parse_pdf(<<x :: binary>>) do
+  defp parse_pdf(<<x::binary>>) do
     page_count =
       case Regex.run(~r/<<\/Linearized.+\/N\s([0-9]+)/, x) do
         nil -> 0

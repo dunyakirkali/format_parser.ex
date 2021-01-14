@@ -39,20 +39,23 @@ defmodule FormatParser.Audio do
 
   defp parse_audio(file) do
     case file do
-      <<"RIFF", x :: binary>> -> parse_wav(x)
-      <<"OggS", x :: binary>> -> parse_ogg(x)
-      <<"FORM", 0x00, x :: binary>> -> parse_aiff(x)
-      <<"fLaC", x :: binary>> -> parse_flac(x)
-      <<"ID3", x :: binary>> -> parse_mp3(x)
+      <<"RIFF", x::binary>> -> parse_wav(x)
+      <<"OggS", x::binary>> -> parse_ogg(x)
+      <<"FORM", 0x00, x::binary>> -> parse_aiff(x)
+      <<"fLaC", x::binary>> -> parse_flac(x)
+      <<"ID3", x::binary>> -> parse_mp3(x)
       _ -> {:error, file}
     end
   end
 
-  defp parse_mp3(<<_ :: binary>>) do
+  defp parse_mp3(<<_::binary>>) do
     %Audio{format: :mp3}
   end
 
-  defp parse_flac(<<_ :: size(112), sample_rate_hz :: size(20), num_audio_channels :: size(3), _ :: size(5), _ :: size(36), _ :: binary>>) do
+  defp parse_flac(
+         <<_::size(112), sample_rate_hz::size(20), num_audio_channels::size(3), _::size(5),
+           _::size(36), _::binary>>
+       ) do
     %Audio{
       format: :flac,
       sample_rate_hz: sample_rate_hz,
@@ -60,7 +63,10 @@ defmodule FormatParser.Audio do
     }
   end
 
-  defp parse_ogg(<<_ :: size(280), channels :: little-integer-size(8), sample_rate_hz :: little-integer-size(32), _ :: binary>>) do
+  defp parse_ogg(
+         <<_::size(280), channels::little-integer-size(8),
+           sample_rate_hz::little-integer-size(32), _::binary>>
+       ) do
     %Audio{
       format: :ogg,
       sample_rate_hz: sample_rate_hz,
@@ -68,12 +74,18 @@ defmodule FormatParser.Audio do
     }
   end
 
-  defp parse_wav(<<_ :: size(144), channels :: little-integer-size(16), sample_rate_hz :: little-integer-size(32), byte_rate :: little-integer-size(32), block_align :: little-integer-size(16), bits_per_sample :: little-integer-size(16), _ :: binary>>) do
+  defp parse_wav(
+         <<_::size(144), channels::little-integer-size(16),
+           sample_rate_hz::little-integer-size(32), byte_rate::little-integer-size(32),
+           block_align::little-integer-size(16), bits_per_sample::little-integer-size(16),
+           _::binary>>
+       ) do
     intrinsics = %{
       byte_rate: byte_rate,
       block_align: block_align,
       bits_per_sample: bits_per_sample
     }
+
     %Audio{
       format: :wav,
       sample_rate_hz: sample_rate_hz,
@@ -82,7 +94,10 @@ defmodule FormatParser.Audio do
     }
   end
 
-  defp parse_aiff(<<_ :: size(56), "COMM", _ :: size(32), channels :: size(16), frames :: size(32), bits_per_sample :: size(16), _sample_rate_components :: size(80), _ :: binary>>) do
+  defp parse_aiff(
+         <<_::size(56), "COMM", _::size(32), channels::size(16), frames::size(32),
+           bits_per_sample::size(16), _sample_rate_components::size(80), _::binary>>
+       ) do
     intrinsics = %{num_frames: frames, bits_per_sample: bits_per_sample}
     %Audio{format: :aiff, num_audio_channels: channels, intrinsics: intrinsics}
   end
