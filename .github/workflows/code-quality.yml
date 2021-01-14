@@ -1,6 +1,7 @@
 name: Code Quality
 
 on:
+  push:
   schedule:
     - cron: "* 1 * * *"
 
