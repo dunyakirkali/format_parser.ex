@@ -23,7 +23,7 @@ defmodule FormatParser.AudioTest do
     assert FormatParser.parse(file).format == :aiff
     assert FormatParser.parse(file).nature == :audio
     assert FormatParser.parse(file).num_audio_channels == 2
-    assert FormatParser.parse(file).intrinsics == %{num_frames: 46433, bits_per_sample: 16}
+    assert FormatParser.parse(file).intrinsics == %{num_frames: 46_433, bits_per_sample: 16}
   end
 
   test "wav" do
