@@ -11,8 +11,7 @@ defmodule FormatParser.Mixfile do
       package: package(),
       description: description(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test],
-      aliases: aliases()
+      preferred_cli_env: [coveralls: :test]
     ]
   end
 
@@ -51,11 +50,5 @@ defmodule FormatParser.Mixfile do
     """
     The owls are not what they seem
     """
-  end
-
-  defp aliases do
-    [
-      code_quality: ["credo --strict", "dialyzer", "doctor"]
-    ]
   end
 end
