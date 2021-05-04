@@ -31,6 +31,7 @@ defmodule FormatParser.Image do
     result
   end
 
+  # credo:disable-for-lines:18 Credo.Check.Refactor.CyclomaticComplexity
   defp parse_image(file) do
     case file do
       <<0x89, "PNG", 0x0D, 0x0A, 0x1A, 0x0A, x::binary>> -> parse_png(x)
