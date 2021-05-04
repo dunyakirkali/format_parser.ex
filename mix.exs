@@ -26,7 +26,7 @@ defmodule FormatParser.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:excoveralls, "~> 0.13.4", only: :test},
+      {:excoveralls, "~> 0.14.0", only: :test},
       {:ex_doc, "~> 0.24.2", only: :dev},
       {:credo, "~> 1.5.4", only: [:dev, :test], runtime: false},
       {:doctor, "~> 0.17.0", only: :dev},
