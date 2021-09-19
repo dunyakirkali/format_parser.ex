@@ -29,7 +29,7 @@ defmodule FormatParser.Mixfile do
       {:excoveralls, "~> 0.14.0", only: :test},
       {:ex_doc, "~> 0.25.2", only: :dev},
       {:credo, "~> 1.5.4", only: [:dev, :test], runtime: false},
-      {:doctor, "~> 0.17.0", only: :dev},
+      {:doctor, "~> 0.18.0", only: :dev},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
