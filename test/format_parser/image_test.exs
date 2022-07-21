@@ -187,4 +187,11 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).width_px == 1023
     assert FormatParser.parse(file).height_px == 551
   end
+
+  test "webp" do
+    {:ok, file} = File.read("priv/test.webp")
+
+    assert FormatParser.parse(file).format == :webp
+    assert FormatParser.parse(file).nature == :image
+  end
 end

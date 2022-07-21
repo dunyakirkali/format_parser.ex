@@ -39,7 +39,7 @@ defmodule FormatParser.Audio do
 
   defp parse_audio(file) do
     case file do
-      <<"RIFF", x::binary>> -> parse_wav(x)
+      <<"RIFF", _::binary-size(4), "WAVE", x::binary>> -> parse_wav(x)
       <<"OggS", x::binary>> -> parse_ogg(x)
       <<"FORM", 0x00, x::binary>> -> parse_aiff(x)
       <<"fLaC", x::binary>> -> parse_flac(x)
@@ -75,7 +75,7 @@ defmodule FormatParser.Audio do
   end
 
   defp parse_wav(
-         <<_::size(144), channels::little-integer-size(16),
+         <<_::binary-size(10), channels::little-integer-size(16),
            sample_rate_hz::little-integer-size(32), byte_rate::little-integer-size(32),
            block_align::little-integer-size(16), bits_per_sample::little-integer-size(16),
            _::binary>>

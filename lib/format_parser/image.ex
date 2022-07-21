@@ -47,6 +47,7 @@ defmodule FormatParser.Image do
       <<0x97, "JB2", 0x0D, 0x0A, 0x1A, 0x0A, x::binary>> -> parse_jb2(x)
       <<"gimp xcf", x::binary>> -> parse_xcf(x)
       <<0x76, 0x2F, 0x31, 0x01, x::binary>> -> parse_exr(x)
+      <<"RIFF", _::binary-size(4), "WEBP", x::binary>> -> parse_webp(x)
       _ -> {:error, file}
     end
   end
@@ -61,6 +62,10 @@ defmodule FormatParser.Image do
 
   defp parse_jb2(<<_::binary>>) do
     %Image{format: :jb2}
+  end
+
+  defp parse_webp(<<_::binary>>) do
+    %Image{format: :webp}
   end
 
   defp parse_psd(<<_::size(80), height::size(32), width::size(32), _::binary>>) do
