@@ -94,6 +94,7 @@ match.format                      #=> :ttf
 | jb2  | x      | x      |       |        |                                                                                 |
 | xcf  | x      | x      |       |        |                                                                                 |
 | exr  | x      | x      |       |        |                                                                                 |
+| webp | x      | x      |       |        |                                                                                 |
 
 ### Font
 
