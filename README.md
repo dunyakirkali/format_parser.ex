@@ -111,7 +111,7 @@ Add the following to your `mix.exs` file
 ```elixir
 def deps do
   [
-    {:format_parser, "~> 1.3.0"}
+    {:format_parser, "~> 1.4.0"}
   ]
 end
 ```
