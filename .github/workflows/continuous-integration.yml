@@ -8,15 +8,15 @@ jobs:
     name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
     strategy:
       matrix:
-        otp: ['24.3']
-        elixir: ['1.12.3', '1.13.4', '1.14.2']
+        otp: ['26.2.5.9']
+        elixir: ['1.16.3', '1.17.3', '1.18.3']
     steps:
-      - uses: actions/checkout@v2
-      - uses: erlef/setup-beam@v1
+      - uses: actions/checkout@v4.2.2
+      - uses: erlef/setup-beam@v1.18.2
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4.2.2
         with:
           path: deps
           key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
