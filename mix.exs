@@ -26,11 +26,11 @@ defmodule FormatParser.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:excoveralls, "~> 0.16.1", only: :test},
-      {:ex_doc, "~> 0.30.4", only: :dev},
-      {:credo, "~> 1.7.0", only: [:dev, :test], runtime: false},
-      {:doctor, "~> 0.21.0", only: :dev},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:excoveralls, "~> 0.18.5", only: :test},
+      {:ex_doc, "~> 0.34", only: :dev},
+      {:credo, "~> 1.7.11", only: [:dev, :test], runtime: false},
+      {:doctor, "~> 0.22.0", only: :dev},
+      {:dialyxir, "~> 1.4.5", only: [:dev], runtime: false}
     ]
   end
 
