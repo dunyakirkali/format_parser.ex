@@ -48,6 +48,7 @@ defmodule FormatParser.Image do
       <<"gimp xcf", x::binary>> -> parse_xcf(x)
       <<0x76, 0x2F, 0x31, 0x01, x::binary>> -> parse_exr(x)
       <<"RIFF", _::binary-size(4), "WEBP", x::binary>> -> parse_webp(x)
+      <<_::binary-size(4), "ftypheic", x::binary>> -> parse_heic(x)
       _ -> {:error, file}
     end
   end
@@ -277,5 +278,9 @@ defmodule FormatParser.Image do
       height_px: height,
       intrinsics: intrinsics
     }
+  end
+
+  defp parse_heic(<<_::binary>>) do
+    %Image{format: :heic}
   end
 end
