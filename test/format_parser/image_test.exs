@@ -194,4 +194,11 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).format == :webp
     assert FormatParser.parse(file).nature == :image
   end
+
+  test "heic" do
+    {:ok, file} = File.read("priv/test.heic")
+
+    assert FormatParser.parse(file).format == :heic
+    assert FormatParser.parse(file).nature == :image
+  end
 end
