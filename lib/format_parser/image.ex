@@ -49,6 +49,7 @@ defmodule FormatParser.Image do
       <<0x76, 0x2F, 0x31, 0x01, x::binary>> -> parse_exr(x)
       <<"RIFF", _::binary-size(4), "WEBP", x::binary>> -> parse_webp(x)
       <<_::binary-size(4), "ftypheic", x::binary>> -> parse_heic(x)
+      <<"<svg", _::binary>> -> parse_svg(file)
       _ -> {:error, file}
     end
   end
@@ -282,5 +283,9 @@ defmodule FormatParser.Image do
 
   defp parse_heic(<<_::binary>>) do
     %Image{format: :heic}
+  end
+
+  defp parse_svg(<<_::binary>>) do
+    %Image{format: :svg}
   end
 end
