@@ -96,6 +96,7 @@ match.format                      #=> :ttf
 | exr  | x      | x      |       |        |                                                                                 |
 | webp | x      | x      |       |        |                                                                                 |
 | heic | x      | x      |       |        |                                                                                 |
+| svg  | x      | x      |       |        |                                                                                 |
 
 ### Font
 
