@@ -35,6 +35,7 @@ defmodule FormatParser.Video do
     case file do
       <<"FLV", 0x01, x::binary>> -> parse_flv(x)
       <<_::binary-size(4), "ftypmp4", _::binary>> -> parse_mp4(file)
+      <<"RIFF", _::binary-size(4), "AVI ", _::binary>> -> parse_avi(file)
       _ -> {:error, file}
     end
   end
@@ -45,5 +46,9 @@ defmodule FormatParser.Video do
 
   defp parse_mp4(<<_::binary>>) do
     %Video{format: :mp4}
+  end
+
+  defp parse_avi(<<_::binary>>) do
+    %Video{format: :avi}
   end
 end

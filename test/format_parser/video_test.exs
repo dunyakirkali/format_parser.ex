@@ -30,4 +30,11 @@ defmodule FormatParser.VideoTest do
     assert FormatParser.parse(file).format == :mp4
     assert FormatParser.parse(file).nature == :video
   end
+
+  test "avi" do
+    {:ok, file} = File.read("priv/test.avi")
+
+    assert FormatParser.parse(file).format == :avi
+    assert FormatParser.parse(file).nature == :video
+  end
 end
