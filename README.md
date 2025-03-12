@@ -69,6 +69,7 @@ match.format                      #=> :ttf
 | Type | Nature | Format |
 | :--: | :----: | :----: |
 | flv  | x      | x      |
+| mp4  | x      | x      |
 
 ### Document
 
