@@ -73,6 +73,7 @@ match.format                      #=> :ttf
 | avi  | x      | x      |
 | wmv  | x      | x      |
 | mov  | x      | x      |
+| webm | x      | x      |
 
 ### Document
 
