@@ -37,4 +37,11 @@ defmodule FormatParser.VideoTest do
     assert FormatParser.parse(file).format == :avi
     assert FormatParser.parse(file).nature == :video
   end
+
+  test "wmv" do
+    {:ok, file} = File.read("priv/test.wmv")
+
+    assert FormatParser.parse(file).format == :wmv
+    assert FormatParser.parse(file).nature == :video
+  end
 end
