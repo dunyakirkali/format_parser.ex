@@ -70,6 +70,7 @@ match.format                      #=> :ttf
 | :--: | :----: | :----: |
 | flv  | x      | x      |
 | mp4  | x      | x      |
+| avi  | x      | x      |
 
 ### Document
 
