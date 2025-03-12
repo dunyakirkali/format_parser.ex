@@ -37,6 +37,7 @@ defmodule FormatParser.Video do
       <<_::binary-size(4), "ftypmp4", _::binary>> -> parse_mp4(file)
       <<"RIFF", _::binary-size(4), "AVI ", _::binary>> -> parse_avi(file)
       <<0x30, 0x26, 0xB2, 0x75, _::binary>> -> parse_wmv(file)
+      <<_::binary-size(4), "ftypqt", _::binary>> -> parse_mov(file)
       _ -> {:error, file}
     end
   end
@@ -55,5 +56,9 @@ defmodule FormatParser.Video do
 
   defp parse_wmv(<<_::binary>>) do
     %Video{format: :wmv}
+  end
+
+  defp parse_mov(<<_::binary>>) do
+    %Video{format: :mov}
   end
 end
