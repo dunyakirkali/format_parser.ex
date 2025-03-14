@@ -44,6 +44,7 @@ defmodule FormatParser.Audio do
       <<"FORM", 0x00, x::binary>> -> parse_aiff(x)
       <<"fLaC", x::binary>> -> parse_flac(x)
       <<"ID3", x::binary>> -> parse_mp3(x)
+      <<0xFF, 0xF1, _::binary>> -> parse_aac(file)
       _ -> {:error, file}
     end
   end
@@ -100,5 +101,9 @@ defmodule FormatParser.Audio do
        ) do
     intrinsics = %{num_frames: frames, bits_per_sample: bits_per_sample}
     %Audio{format: :aiff, num_audio_channels: channels, intrinsics: intrinsics}
+  end
+
+  defp parse_aac(<<_::binary>>) do
+    %Audio{format: :aac}
   end
 end

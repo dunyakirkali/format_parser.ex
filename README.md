@@ -63,6 +63,7 @@ match.format                      #=> :ttf
 | wav   | x      | x      | x           | x             | byte_rate, block_align, bits_per_sample |
 | ogg   | x      | x      | x           | x             |                                         |
 | flac  | x      | x      | x           | x             |                                         |
+| aac   | x      | x      | x           | x             |                                         |
 
 ### Video
 
