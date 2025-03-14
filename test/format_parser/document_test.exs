@@ -41,4 +41,11 @@ defmodule FormatParser.DocumentTest do
     assert FormatParser.parse(file).format == :docx
     assert FormatParser.parse(file).nature == :document
   end
+
+  test "doc" do
+    {:ok, file} = File.read("priv/test.doc")
+
+    assert FormatParser.parse(file).format == :doc
+    assert FormatParser.parse(file).nature == :document
+  end
 end

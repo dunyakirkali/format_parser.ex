@@ -82,6 +82,7 @@ match.format                      #=> :ttf
 | rtf  | x      | x      |            |
 | pdf  | x      | x      | page_count |
 | docx | x      | x      |            |
+| doc  | x      | x      |            |
 
 ### Image
 

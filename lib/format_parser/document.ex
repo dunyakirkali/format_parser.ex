@@ -36,6 +36,7 @@ defmodule FormatParser.Document do
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x::binary>> -> parse_rtf(x)
       <<"%PDF", x::binary>> -> parse_pdf(x)
       <<"PK", 0x03, 0x04, _::binary>> -> parse_docx(file)
+      <<0xD0, 0xCF, 0x11, 0xE0, _::binary>> -> parse_doc(file)
       _ -> {:error, file}
     end
   end
@@ -56,5 +57,9 @@ defmodule FormatParser.Document do
 
   defp parse_docx(<<_::binary>>) do
     %Document{format: :docx}
+  end
+
+  defp parse_doc(<<_::binary>>) do
+    %Document{format: :doc}
   end
 end
