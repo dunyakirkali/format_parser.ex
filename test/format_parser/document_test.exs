@@ -34,4 +34,11 @@ defmodule FormatParser.DocumentTest do
       assert FormatParser.parse(file).intrinsics[:page_count] == 1
     end)
   end
+
+  test "docx" do
+    {:ok, file} = File.read("priv/test.docx")
+
+    assert FormatParser.parse(file).format == :docx
+    assert FormatParser.parse(file).nature == :document
+  end
 end
