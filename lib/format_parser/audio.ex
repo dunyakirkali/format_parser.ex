@@ -40,7 +40,7 @@ defmodule FormatParser.Audio do
   defp parse_audio(file) do
     case file do
       <<"RIFF", _::binary-size(4), "WAVE", x::binary>> -> parse_wav(x)
-      <<"OggS", x::binary>> -> parse_ogg(x)
+      <<"OggS", _::binary>> -> parse_ogg(file)
       <<"FORM", 0x00, x::binary>> -> parse_aiff(x)
       <<"fLaC", x::binary>> -> parse_flac(x)
       <<"ID3", x::binary>> -> parse_mp3(x)
@@ -64,14 +64,29 @@ defmodule FormatParser.Audio do
     }
   end
 
-  defp parse_ogg(
-         <<_::size(280), channels::little-integer-size(8),
-           sample_rate_hz::little-integer-size(32), _::binary>>
-       ) do
+  defp parse_ogg(<<_::binary-size(29), "vorbis", x::binary>>) do
+    parse_vorbis(x)
+  end
+
+  defp parse_ogg(<<_::binary-size(28), "OpusHead", x::binary>>) do
+    parse_opus(x)
+  end
+
+  defp parse_vorbis(<<
+         vorbis_version::size(32),
+         channels::size(8),
+         sample_rate_hz::little-integer-size(32),
+         _::binary
+       >>) do
+    intrinsics = %{
+      vorbis_version: vorbis_version
+    }
+
     %Audio{
-      format: :ogg,
+      format: :vorbis,
       sample_rate_hz: sample_rate_hz,
-      num_audio_channels: channels
+      num_audio_channels: channels,
+      intrinsics: intrinsics
     }
   end
 
@@ -105,5 +120,29 @@ defmodule FormatParser.Audio do
 
   defp parse_aac(<<_::binary>>) do
     %Audio{format: :aac}
+  end
+
+  defp parse_opus(<<
+         version::integer-size(8),
+         channels::integer-size(8),
+         pre_skip::little-integer-size(16),
+         sample_rate_hz::little-integer-size(32),
+         output_gain::little-integer-size(16),
+         mapping_family::integer-size(8),
+         _::binary
+       >>) do
+    intrinsics = %{
+      version: version,
+      pre_skip: pre_skip,
+      output_gain: output_gain,
+      mapping_family: mapping_family
+    }
+
+    %Audio{
+      format: :opus,
+      sample_rate_hz: sample_rate_hz,
+      num_audio_channels: channels,
+      intrinsics: intrinsics
+    }
   end
 end

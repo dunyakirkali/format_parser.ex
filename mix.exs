@@ -6,7 +6,7 @@ defmodule FormatParser.Mixfile do
       app: :format_parser,
       version: "1.14.0",
       elixir: "~> 1.4",
-      start_permanent: Mix.env == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       description: description(),

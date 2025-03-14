@@ -41,13 +41,17 @@ defmodule FormatParser.AudioTest do
            }
   end
 
-  test "ogg" do
+  test "vorbis" do
     {:ok, file} = File.read("priv/test.ogg")
 
-    assert FormatParser.parse(file).format == :ogg
+    assert FormatParser.parse(file).format == :vorbis
     assert FormatParser.parse(file).nature == :audio
     assert FormatParser.parse(file).sample_rate_hz == 44_100
     assert FormatParser.parse(file).num_audio_channels == 2
+
+    assert FormatParser.parse(file).intrinsics == %{
+             vorbis_version: 0
+           }
   end
 
   test "flac" do
@@ -71,5 +75,21 @@ defmodule FormatParser.AudioTest do
 
     assert FormatParser.parse(file).format == :aac
     assert FormatParser.parse(file).nature == :audio
+  end
+
+  test "opus" do
+    {:ok, file} = File.read("priv/test.opus")
+
+    assert FormatParser.parse(file).format == :opus
+    assert FormatParser.parse(file).nature == :audio
+    assert FormatParser.parse(file).sample_rate_hz == 48_000
+    assert FormatParser.parse(file).num_audio_channels == 2
+
+    assert FormatParser.parse(file).intrinsics == %{
+             version: 1,
+             pre_skip: 312,
+             output_gain: 0,
+             mapping_family: 0
+           }
   end
 end
