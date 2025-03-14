@@ -57,13 +57,14 @@ match.format                      #=> :ttf
 
 ### Audio
 
-| Type  | Nature | Format | Sample Rate | # of Channels | Intrinsics                              |
-| :---: | :----: | :----: | :---------: | :-----------: | :-------------------------------------- |
-| aiff  | x      | x      |             | x             | num_frames, bits_per_sample             |
-| wav   | x      | x      | x           | x             | byte_rate, block_align, bits_per_sample |
-| ogg   | x      | x      | x           | x             |                                         |
-| flac  | x      | x      | x           | x             |                                         |
-| aac   | x      | x      | x           | x             |                                         |
+| Type   | Nature | Format | Sample Rate | # of Channels | Intrinsics                                     |
+| :----: | :----: | :----: | :---------: | :-----------: | :--------------------------------------------: |
+| aiff   | x      | x      |             | x             | num_frames, bits_per_sample                    |
+| wav    | x      | x      | x           | x             | byte_rate, block_align, bits_per_sample        |
+| vorbis | x      | x      | x           | x             | vorbis_version                                 |
+| opus   | x      | x      | x           | x             | version, pre_skip, output_gain, mapping_family |
+| flac   | x      | x      | x           | x             |                                                |
+| aac    | x      | x      | x           | x             |                                                |
 
 ### Video
 
