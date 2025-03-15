@@ -41,10 +41,17 @@ defmodule FormatParser.Document do
     end
   end
 
+  @doc """
+  Parses an RTF file and returns a Document struct with format set to :rtf.
+  """
   defp parse_rtf(<<_x::binary>>) do
     %Document{format: :rtf}
   end
 
+  @doc """
+  Parses a PDF file and returns a Document struct with format set to :pdf.
+  Extracts the page count from the file if available.
+  """
   defp parse_pdf(<<x::binary>>) do
     page_count =
       case Regex.run(~r/<<\/Linearized.+\/N\s([0-9]+)/, x) do
@@ -55,18 +62,30 @@ defmodule FormatParser.Document do
     %Document{format: :pdf, intrinsics: %{page_count: page_count}}
   end
 
+  @doc """
+  Parses a DOCX file and returns a Document struct with format set to :docx.
+  """
   defp parse_docx(<<_::binary>>) do
     %Document{format: :docx}
   end
 
+  @doc """
+  Parses a DOC file and returns a Document struct with format set to :doc.
+  """
   defp parse_doc(<<_::binary>>) do
     %Document{format: :doc}
   end
 
+  @doc """
+  Parses an ODT file and returns a Document struct with format set to :odt.
+  """
   defp parse_odt(<<_::binary>>) do
     %Document{format: :odt}
   end
 
+  @doc """
+  Determines if a ZIP file is a DOCX or ODT file based on its contents.
+  """
   defp parse_zip_file(<<_::binary-size(300), "word/", _::binary>>, file), do: parse_docx(file)
   defp parse_zip_file(_, file), do: parse_odt(file)
 end
