@@ -35,7 +35,7 @@ defmodule FormatParser.Document do
     case file do
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x::binary>> -> parse_rtf(x)
       <<"%PDF", x::binary>> -> parse_pdf(x)
-      <<"PK", 0x03, 0x04, _::binary>> -> parse_docx(file)
+      <<"PK", 0x03, 0x04, rest::binary>> -> parse_zip_file(rest, file)
       <<0xD0, 0xCF, 0x11, 0xE0, _::binary>> -> parse_doc(file)
       _ -> {:error, file}
     end
@@ -62,4 +62,11 @@ defmodule FormatParser.Document do
   defp parse_doc(<<_::binary>>) do
     %Document{format: :doc}
   end
+
+  defp parse_odt(<<_::binary>>) do
+    %Document{format: :odt}
+  end
+
+  defp parse_zip_file(<<_::binary-size(300), "word/", _::binary>>, file), do: parse_docx(file)
+  defp parse_zip_file(_, file), do: parse_odt(file)
 end

@@ -48,4 +48,11 @@ defmodule FormatParser.DocumentTest do
     assert FormatParser.parse(file).format == :doc
     assert FormatParser.parse(file).nature == :document
   end
+
+  test "odt" do
+    {:ok, file} = File.read("priv/test.odt")
+
+    assert FormatParser.parse(file).format == :odt
+    assert FormatParser.parse(file).nature == :document
+  end
 end
