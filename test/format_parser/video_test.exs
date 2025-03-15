@@ -58,4 +58,11 @@ defmodule FormatParser.VideoTest do
     assert FormatParser.parse(file).format == :webm
     assert FormatParser.parse(file).nature == :video
   end
+
+  test "mkv" do
+    {:ok, file} = File.read("priv/test.mkv")
+
+    assert FormatParser.parse(file).format == :mkv
+    assert FormatParser.parse(file).nature == :video
+  end
 end
