@@ -1,5 +1,5 @@
 defmodule FormatParser do
-  alias FormatParser.{Audio, Document, Font, Image, Video, Data}
+  alias FormatParser.{Audio, Data, Document, Font, Image, Video}
 
   @moduledoc """
   The FormatParser Module
