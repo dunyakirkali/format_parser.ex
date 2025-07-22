@@ -7,18 +7,33 @@ defmodule FormatParser.Document do
   The Document struct contains the fields format and nature.
   """
 
+  @type t :: %__MODULE__{
+          format: any(),
+          nature: atom(),
+          intrinsics: map()
+        }
   defstruct [:format, nature: :document, intrinsics: %{}]
 
   @doc """
-  Parses a file and extracts some information from it.
+  Parses a document from the given input.
 
-  Takes a `binary file` as argument.
+  - If the input is a tuple `{:error, file}` where `file` is a binary, it attempts to parse the document from the file.
+  - If the input is a binary `file`, it attempts to parse the document from the file.
+  - For any other input, it returns the input as-is.
 
-  Returns a struct which contains all information that has been extracted from the file if the file is recognized.
+  ## Examples
 
-  Returns the following tuple if file not recognized: `{:error, file}`.
+    iex> parse({:error, "path/to/file"})
+    # Parses the document from the given file
+
+    iex> parse("path/to/file")
+    # Parses the document from the given file
+
+    iex> parse(:ok)
+    :ok
 
   """
+  @spec parse({:error, binary()} | binary() | any()) :: any()
   def parse({:error, file}) when is_binary(file) do
     parse_document(file)
   end

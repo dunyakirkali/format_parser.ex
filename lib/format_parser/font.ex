@@ -7,18 +7,33 @@ defmodule FormatParser.Font do
   The Font struct contains the fields format and nature.
   """
 
+  @type t :: %Font{
+          format: atom() | nil,
+          nature: :font
+        }
+
   defstruct [:format, nature: :font]
 
   @doc """
-  Parses a file and extracts some information from it.
+  Parses a font file or result.
 
-  Takes a `binary file` as argument.
+  - If given a tuple `{:error, file}` where `file` is a binary, attempts to parse the font from the file.
+  - If given a binary `file`, attempts to parse the font from the file.
+  - For any other input, returns the input as-is.
 
-  Returns a struct which contains all information that has been extracted from the file if the file is recognized.
+  ## Examples
 
-  Returns the following tuple if file not recognized: `{:error, file}`.
+    iex> parse({:error, "font.ttf"})
+    # Parses the font from "font.ttf"
+
+    iex> parse("font.ttf")
+    # Parses the font from "font.ttf"
+
+    iex> parse(:ok)
+    :ok
 
   """
+  @spec parse({:error, binary()} | binary() | any()) :: any()
   def parse({:error, file}) when is_binary(file) do
     parse_font(file)
   end

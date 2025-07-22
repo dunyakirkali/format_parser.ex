@@ -1,5 +1,5 @@
 defmodule FormatParser do
-  alias FormatParser.{Audio, Document, Font, Image, Video}
+  alias FormatParser.{Audio, Data, Document, Font, Image, Video}
 
   @moduledoc """
   The FormatParser Module
@@ -37,6 +37,7 @@ defmodule FormatParser do
     |> Document.parse()
     |> Video.parse()
     |> Image.parse()
+    |> Data.parse()
     |> case do
       {:error, _} -> {:error, "Unknown"}
       result -> result

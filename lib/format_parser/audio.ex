@@ -6,6 +6,13 @@ defmodule FormatParser.Audio do
 
   The Audio struct contains the fields format, sample_rate_hz, num_audio_channels, intrinsics and nature.
   """
+  @type t :: %Audio{
+          format: atom() | nil,
+          sample_rate_hz: integer() | nil,
+          num_audio_channels: integer() | nil,
+          nature: :audio,
+          intrinsics: map()
+        }
 
   defstruct [
     :format,
@@ -16,15 +23,25 @@ defmodule FormatParser.Audio do
   ]
 
   @doc """
-  Parses a file and extracts some information from it.
+  Parses an audio file or result.
 
-  Takes a `binary file` as argument.
+  - If given a tuple `{:error, file}` where `file` is a binary, attempts to parse the audio file.
+  - If given a binary `file`, attempts to parse the audio file.
+  - For any other input, returns the input as-is.
 
-  Returns a struct which contains all information that has been extracted from the file if the file is recognized.
+  ## Examples
 
-  Returns the following tuple if file not recognized: `{:error, file}`.
+    iex> parse({:error, "audio.mp3"})
+    # parsed audio result
+
+    iex> parse("audio.mp3")
+    # parsed audio result
+
+    iex> parse(:ok)
+    :ok
 
   """
+  @spec parse({:error, binary()} | binary() | any()) :: any()
   def parse({:error, file}) when is_binary(file) do
     parse_audio(file)
   end
