@@ -51,9 +51,21 @@ match = FormatParser.parse(file)
 match.nature                      #=> :font
 match.format                      #=> :ttf
 
+# Data
+{:ok, file} = File.read("mydata.parquet")
+match = FormatParser.parse(file)
+match.nature                      #=> :data
+match.format                      #=> :pqt
+
 ```
 
 ## Supported Formats
+
+### Data
+
+| Type | Nature | Format | Intrinsics |
+| :--: | :----: | :----: | :--------- |
+| pqt  | x      | x      |            |
 
 ### Audio
 
