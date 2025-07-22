@@ -7,18 +7,34 @@ defmodule FormatParser.Video do
   The Video struct contains the fields format, width_px, height_px and nature.
   """
 
+  @type t :: %Video{
+          format: atom() | nil,
+          width_px: integer() | nil,
+          height_px: integer() | nil,
+          nature: atom()
+        }
   defstruct [:format, :width_px, :height_px, nature: :video]
 
   @doc """
-  Parses a file and extracts some information from it.
+  Parses a video file or result.
 
-  Takes a `binary file` as argument.
+  - If given a tuple `{:error, file}` where `file` is a binary, attempts to parse the video file.
+  - If given a binary `file`, attempts to parse the video file.
+  - For any other input, returns the input as-is.
 
-  Returns a struct which contains all information that has been extracted from the file if the file is recognized.
+  ## Examples
 
-  Returns the following tuple if file not recognized: `{:error, file}`.
+    iex> parse("video.mp4")
+    # parsed video result
+
+    iex> parse({:error, "video.mp4"})
+    # parsed video result
+
+    iex> parse(:unexpected)
+    :unexpected
 
   """
+  @spec parse({:error, binary()} | binary() | any()) :: any()
   def parse({:error, file}) when is_binary(file) do
     parse_video(file)
   end

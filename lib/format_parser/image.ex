@@ -7,18 +7,35 @@ defmodule FormatParser.Image do
   The Image struct contains the fields format, width_px, height_px, intrinsics and nature.
   """
 
+  @type t :: %Image{
+          format: atom() | nil,
+          width_px: integer() | nil,
+          height_px: integer() | nil,
+          nature: atom(),
+          intrinsics: map()
+        }
   defstruct [:format, :width_px, :height_px, nature: :image, intrinsics: %{}]
 
   @doc """
-  Parses a file and extracts some information from it.
+  Parses an image file or result.
 
-  Takes a `binary file` as argument.
+  - If given a tuple `{:error, file}` where `file` is a binary, attempts to parse the image from the file.
+  - If given a binary `file`, attempts to parse the image from the file.
+  - For any other input, returns the input as-is.
 
-  Returns a struct which contains all information that has been extracted from the file if the file is recognized.
+  ## Examples
 
-  Returns the following tuple if file not recognized: `{:error, file}`.
+    iex> parse("image.png")
+    # Parsed image result
+
+    iex> parse({:error, "image.png"})
+    # Parsed image result
+
+    iex> parse(:some_other_result)
+    :some_other_result
 
   """
+  @spec parse({:error, binary()} | binary() | any()) :: any()
   def parse({:error, file}) when is_binary(file) do
     parse_image(file)
   end
