@@ -63,9 +63,10 @@ match.format                      #=> :pqt
 
 ### Data
 
-| Type | Nature | Format | Intrinsics |
-| :--: | :----: | :----: | :--------- |
-| pqt  | x      | x      |            |
+| Type    | Nature | Format | Intrinsics |
+| :-----: | :----: | :----: | :--------- |
+| pqt     | x      | x      |            |
+| duckdb  | x      | x      |            |
 
 ### Audio
 

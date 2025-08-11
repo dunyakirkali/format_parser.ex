@@ -11,4 +11,11 @@ defmodule FormatParser.DataTest do
     assert FormatParser.parse(file).format == :pqt
     assert FormatParser.parse(file).nature == :data
   end
+
+  test "duckdb" do
+    {:ok, file} = File.read("priv/test.duckdb")
+
+    assert FormatParser.parse(file).format == :duckdb
+    assert FormatParser.parse(file).nature == :data
+  end
 end

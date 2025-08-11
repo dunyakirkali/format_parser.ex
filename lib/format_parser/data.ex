@@ -48,11 +48,16 @@ defmodule FormatParser.Data do
   defp parse_data(file) do
     case file do
       <<"PAR1", x::binary>> -> parse_pqt(x)
+      <<_::binary-size(8), "DUCK", x::binary>> -> parse_duckdb(x)
       _ -> {:error, file}
     end
   end
 
   defp parse_pqt(<<_x::binary>>) do
     %Data{format: :pqt}
+  end
+
+  defp parse_duckdb(<<_x::binary>>) do
+    %Data{format: :duckdb}
   end
 end
