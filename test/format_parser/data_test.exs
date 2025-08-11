@@ -12,6 +12,13 @@ defmodule FormatParser.DataTest do
     assert FormatParser.parse(file).nature == :data
   end
 
+  test "sqlite3" do
+    {:ok, file} = File.read("priv/test.sqlite3")
+
+    assert FormatParser.parse(file).format == :sqlite3
+    assert FormatParser.parse(file).nature == :data
+  end
+
   test "duckdb" do
     {:ok, file} = File.read("priv/test.duckdb")
 
