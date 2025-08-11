@@ -48,11 +48,16 @@ defmodule FormatParser.Data do
   defp parse_data(file) do
     case file do
       <<"PAR1", x::binary>> -> parse_pqt(x)
+      <<"SQLite format 3", x::binary>> -> parse_sqlite3(x)
       _ -> {:error, file}
     end
   end
 
   defp parse_pqt(<<_x::binary>>) do
     %Data{format: :pqt}
+  end
+
+  defp parse_sqlite3(<<_x::binary>>) do
+    %Data{format: :sqlite3}
   end
 end
