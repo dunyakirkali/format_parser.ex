@@ -63,9 +63,10 @@ match.format                      #=> :pqt
 
 ### Data
 
-| Type | Nature | Format | Intrinsics |
-| :--: | :----: | :----: | :--------- |
-| pqt  | x      | x      |            |
+| Type     | Nature | Format | Intrinsics |
+| :---- -: | :----: | :----: | :--------- |
+| pqt      | x      | x      |            |
+| sqlite3  | x      | x      |            |
 
 ### Audio
 
