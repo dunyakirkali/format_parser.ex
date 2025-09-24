@@ -57,6 +57,12 @@ match = FormatParser.parse(file)
 match.nature                      #=> :data
 match.format                      #=> :pqt
 
+# Archive
+{:ok, file} = File.read("myarchive.iso")
+match = FormatParser.parse(file)
+match.nature                      #=> :archive
+match.format                      #=> :iso
+
 ```
 
 ## Supported Formats
@@ -130,6 +136,12 @@ match.format                      #=> :pqt
 | ttf  | x      | x      |
 | otf  | x      | x      |
 | fon  | x      | x      |
+
+### Archive
+
+| Type | Nature | Format |
+| :--: | :----: | :----: |
+| iso  | x      | x      |
 
 ## Installation
 
