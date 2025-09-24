@@ -1,11 +1,11 @@
 defmodule FormatParser do
-  alias FormatParser.{Audio, Data, Document, Font, Image, Video}
+  alias FormatParser.{Archive, Audio, Data, Document, Font, Image, Video}
 
   @moduledoc """
   The FormatParser Module
 
   FormatParser parses a binary file and extracts the format and some additional information from it.
-  It can deal with Audio, Video, Fonts, Images and Documents.
+  It can deal with Audio, Video, Fonts, Images, Archives and Documents.
 
   """
 
@@ -38,6 +38,7 @@ defmodule FormatParser do
     |> Video.parse()
     |> Image.parse()
     |> Data.parse()
+    |> Archive.parse()
     |> case do
       {:error, _} -> {:error, "Unknown"}
       result -> result
