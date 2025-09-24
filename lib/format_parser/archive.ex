@@ -13,6 +13,8 @@ defmodule FormatParser.Archive do
         }
   defstruct [:format, nature: :archive, intrinsics: %{}]
 
+  @iso_signature_offset 0x8801
+
   @doc """
   Parses the given input based on its type.
 
@@ -47,7 +49,7 @@ defmodule FormatParser.Archive do
 
   defp parse_archive(file) do
     case file do
-      <<_::size(0x8801 * 8), "CD001", x::binary>> -> parse_iso(x)
+      <<_::size(@iso_signature_offset * 8), "CD001", x::binary>> -> parse_iso(x)
       _ -> {:error, file}
     end
   end
