@@ -77,6 +77,10 @@ defmodule FormatParser.Archive do
       <<0xFD, "7zXZ", 0x00, _rest::binary>> ->
         parse_xz(file)
 
+      # ZSTD archive
+      <<0x28, 0xB5, 0x2F, 0xFD, _rest::binary>> ->
+        parse_zstd(file)
+
       # TAR archive (ustar format) - magic at offset 257
       _ ->
         parse_tar_or_unknown(file)
@@ -124,5 +128,9 @@ defmodule FormatParser.Archive do
 
   defp parse_tar(<<_::binary>>) do
     %Archive{format: :tar}
+  end
+
+  defp parse_zstd(<<_::binary>>) do
+    %Archive{format: :zstd}
   end
 end

@@ -44,4 +44,11 @@ defmodule FormatParser.ArchiveTest do
     assert FormatParser.parse(file).format == :tar
     assert FormatParser.parse(file).nature == :archive
   end
+
+  test "zstd" do
+    {:ok, file} = File.read("priv/test.zst")
+
+    assert FormatParser.parse(file).format == :zstd
+    assert FormatParser.parse(file).nature == :archive
+  end
 end

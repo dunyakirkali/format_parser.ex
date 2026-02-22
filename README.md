@@ -156,6 +156,7 @@ match.format                      #=> :iso
 | xz   | x      | x      |
 | tar  | x      | x      |
 | iso  | x      | x      |
+| zstd | x      | x      |
 
 ## Installation
 
