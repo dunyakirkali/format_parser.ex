@@ -4,11 +4,33 @@ defmodule FormatParser.Archive do
   @moduledoc """
   An Archive struct and functions.
 
-  The Archive struct contains the fields format and nature.
+  The Archive struct contains the fields format, nature, and intrinsics.
+
+  ## Supported Formats
+
+  - `:zip` - ZIP archive
+  - `:rar` - RAR archive (1.5+)
+  - `:"7z"` - 7-Zip archive
+  - `:gz` - GZIP compressed file
+  - `:bz2` - BZIP2 compressed file
+  - `:xz` - XZ compressed file
+  - `:tar` - TAR archive (ustar format)
+  - `:iso` - ISO 9660 disc image
+  - `:zstd` - Zstandard compressed file
+  """
+
+  @typedoc """
+  The Archive struct.
+
+  ## Fields
+
+  - `:format` - The detected archive format (e.g., `:zip`, `:rar`, `:gz`)
+  - `:nature` - Always `:archive` for this struct
+  - `:intrinsics` - Additional format-specific metadata (currently unused)
   """
   @type t :: %__MODULE__{
-          format: any(),
-          nature: atom(),
+          format: atom() | nil,
+          nature: :archive,
           intrinsics: map()
         }
   defstruct [:format, nature: :archive, intrinsics: %{}]
@@ -16,22 +38,35 @@ defmodule FormatParser.Archive do
   @iso_signature_offset 0x8001
 
   @doc """
-  Parses the given input based on its type.
+  Parses an archive file and returns an Archive struct if recognized.
 
-  - If the input is a tuple `{:error, file}` where `file` is a binary, it attempts to parse the file data.
-  - If the input is a binary, it parses the file data.
-  - For any other input, it returns the input as is.
+  This function attempts to detect the archive format by examining magic bytes
+  at specific offsets in the binary data.
+
+  ## Arguments
+
+  - `input` - Can be one of:
+    - `{:error, binary}` - A tuple containing binary file data (used in parser chain)
+    - `binary` - Raw binary file data
+    - `any` - Any other value is returned as-is (pass-through for parser chain)
+
+  ## Returns
+
+  - `%Archive{}` - If the file is a recognized archive format
+  - `{:error, binary}` - If the file is not recognized as an archive
+  - The input unchanged if it's not a binary or error tuple
 
   ## Examples
 
-    iex> parse({:error, "file.txt"})
-    # Parses the file data
+      iex> {:ok, file} = File.read("archive.zip")
+      iex> FormatParser.Archive.parse(file)
+      %FormatParser.Archive{format: :zip, nature: :archive, intrinsics: %{}}
 
-    iex> parse("file.txt")
-    # Parses the file data
+      iex> FormatParser.Archive.parse({:error, zip_binary})
+      %FormatParser.Archive{format: :zip, nature: :archive, intrinsics: %{}}
 
-    iex> parse(:ok)
-    :ok
+      iex> FormatParser.Archive.parse(%FormatParser.Image{})
+      %FormatParser.Image{}
 
   """
   @spec parse({:error, binary()} | binary() | any()) :: any()

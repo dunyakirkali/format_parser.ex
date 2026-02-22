@@ -5,8 +5,28 @@ defmodule FormatParser.Video do
   A Video struct and functions.
 
   The Video struct contains the fields format, width_px, height_px and nature.
+
+  ## Supported Formats
+
+  - FLV (Flash Video)
+  - MP4 (MPEG-4 Part 14)
+  - AVI (Audio Video Interleave)
+  - WMV (Windows Media Video)
+  - MOV (QuickTime)
+  - WebM
+  - MKV (Matroska)
   """
 
+  @typedoc """
+  A struct representing a parsed video file.
+
+  ## Fields
+
+  - `:format` - The video format as an atom (e.g., `:mp4`, `:mkv`, `:webm`)
+  - `:width_px` - The video width in pixels (if available)
+  - `:height_px` - The video height in pixels (if available)
+  - `:nature` - Always `:video` for video files
+  """
   @type t :: %Video{
           format: atom() | nil,
           width_px: integer() | nil,
@@ -24,14 +44,15 @@ defmodule FormatParser.Video do
 
   ## Examples
 
-    iex> parse("video.mp4")
-    # parsed video result
+      iex> {:ok, file} = File.read("priv/test.mp4")
+      iex> result = FormatParser.Video.parse(file)
+      iex> result.format
+      :mp4
+      iex> result.nature
+      :video
 
-    iex> parse({:error, "video.mp4"})
-    # parsed video result
-
-    iex> parse(:unexpected)
-    :unexpected
+      iex> FormatParser.Video.parse(%FormatParser.Image{})
+      %FormatParser.Image{}
 
   """
   @spec parse({:error, binary()} | binary() | any()) :: any()

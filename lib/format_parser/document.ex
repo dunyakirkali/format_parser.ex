@@ -4,12 +4,44 @@ defmodule FormatParser.Document do
   @moduledoc """
   A Document struct and functions.
 
-  The Document struct contains the fields format and nature.
+  The Document struct contains the fields format, nature, and intrinsics.
+
+  ## Supported Formats
+
+  | Format | Extension | Description |
+  |--------|-----------|-------------|
+  | `:rtf` | .rtf | Rich Text Format |
+  | `:pdf` | .pdf | Portable Document Format |
+  | `:docx` | .docx | Microsoft Word (Open XML) |
+  | `:doc` | .doc | Microsoft Word (Legacy) |
+  | `:xlsx` | .xlsx | Microsoft Excel (Open XML) |
+  | `:pptx` | .pptx | Microsoft PowerPoint (Open XML) |
+  | `:odt` | .odt | OpenDocument Text |
+  | `:ods` | .ods | OpenDocument Spreadsheet |
+  | `:odp` | .odp | OpenDocument Presentation |
+  | `:epub` | .epub | Electronic Publication |
+
+  ## Intrinsics
+
+  Some formats provide additional metadata in the `intrinsics` field:
+
+  - PDF: `%{page_count: integer}` - Number of pages (from linearized PDFs)
+
   """
 
+  @typedoc """
+  A struct representing a parsed document file.
+
+  ## Fields
+
+    * `:format` - The document format as an atom (e.g., `:pdf`, `:docx`, `:odt`)
+    * `:nature` - Always `:document` for document files
+    * `:intrinsics` - A map containing format-specific metadata
+
+  """
   @type t :: %__MODULE__{
-          format: any(),
-          nature: atom(),
+          format: atom() | nil,
+          nature: :document,
           intrinsics: map()
         }
   defstruct [:format, nature: :document, intrinsics: %{}]
@@ -17,20 +49,32 @@ defmodule FormatParser.Document do
   @doc """
   Parses a document from the given input.
 
-  - If the input is a tuple `{:error, file}` where `file` is a binary, it attempts to parse the document from the file.
-  - If the input is a binary `file`, it attempts to parse the document from the file.
-  - For any other input, it returns the input as-is.
+  This function attempts to identify document formats by examining magic bytes
+  and internal file structure. ZIP-based formats (DOCX, XLSX, PPTX, ODT, ODS, ODP, EPUB)
+  are detected by examining their internal file entries.
+
+  ## Arguments
+
+    * `input` - Can be one of:
+      * `{:error, binary}` - A tuple containing binary file content (used in parser chain)
+      * `binary` - Raw binary file content
+      * `any` - Any other value is returned as-is (pass-through for parser chain)
+
+  ## Returns
+
+    * `%FormatParser.Document{}` - When a supported document format is detected
+    * `{:error, binary}` - When the format is not recognized (for parser chain)
+    * The input unchanged - When input is neither a binary nor an error tuple
 
   ## Examples
 
-    iex> parse({:error, "path/to/file"})
-    # Parses the document from the given file
+      iex> {:ok, file} = File.read("priv/test.pdf")
+      iex> result = FormatParser.Document.parse(file)
+      iex> result.format
+      :pdf
 
-    iex> parse("path/to/file")
-    # Parses the document from the given file
-
-    iex> parse(:ok)
-    :ok
+      iex> FormatParser.Document.parse(%FormatParser.Image{})
+      %FormatParser.Image{}
 
   """
   @spec parse({:error, binary()} | binary() | any()) :: any()

@@ -5,6 +5,42 @@ defmodule FormatParser.Image do
   An Image struct and functions.
 
   The Image struct contains the fields format, width_px, height_px, intrinsics and nature.
+
+  ## Supported Formats
+
+  | Format | Extension | Width/Height | Intrinsics |
+  |--------|-----------|:------------:|------------|
+  | `:png` | .png | ✓ | bit_depth, color_type, compression_method, filter_method, interlace_method, crc |
+  | `:jpg` | .jpg, .jpeg | ✓ | - |
+  | `:gif` | .gif | ✓ | - |
+  | `:bmp` | .bmp | ✓ | - |
+  | `:tif` | .tif, .tiff | ✓ | - |
+  | `:psd` | .psd | ✓ | - |
+  | `:ico` | .ico | ✓ | num_color_palette, color_planes, bits_per_pixel |
+  | `:cur` | .cur | ✓ | num_color_palette, hotspot_horizontal_coords, hotspot_vertical_coords |
+  | `:cr2` | .cr2 | ✓ | date_time, model, preview_byte_count, preview_offset |
+  | `:nef` | .nef | ✓ | date_time, model, preview_byte_count, preview_offset |
+  | `:webp` | .webp | - | - |
+  | `:heic` | .heic | - | - |
+  | `:avif` | .avif | - | - |
+  | `:svg` | .svg | - | - |
+  | `:jb2` | .jb2 | - | - |
+  | `:xcf` | .xcf | - | - |
+  | `:exr` | .exr | - | - |
+
+  """
+
+  @typedoc """
+  A struct representing a parsed image file.
+
+  ## Fields
+
+    * `:format` - The image format as an atom (e.g., `:png`, `:jpg`, `:gif`)
+    * `:width_px` - The image width in pixels, or `nil` if not available
+    * `:height_px` - The image height in pixels, or `nil` if not available
+    * `:nature` - Always `:image` for image files
+    * `:intrinsics` - A map containing format-specific metadata
+
   """
 
   @type t :: %Image{

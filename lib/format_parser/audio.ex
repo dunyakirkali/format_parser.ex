@@ -5,6 +5,33 @@ defmodule FormatParser.Audio do
   An Audio struct and functions.
 
   The Audio struct contains the fields format, sample_rate_hz, num_audio_channels, intrinsics and nature.
+
+  ## Supported Formats
+
+  | Format    | Sample Rate | Channels | Intrinsics |
+  |-----------|:-----------:|:--------:|------------|
+  | `:aiff`   |             | ✓        | num_frames, bits_per_sample |
+  | `:wav`    | ✓           | ✓        | byte_rate, block_align, bits_per_sample |
+  | `:vorbis` | ✓           | ✓        | vorbis_version |
+  | `:opus`   | ✓           | ✓        | version, pre_skip, output_gain, mapping_family |
+  | `:flac`   | ✓           | ✓        | |
+  | `:mp3`    |             |          | |
+  | `:aac`    |             |          | |
+  | `:midi`   |             |          | format, num_tracks, time_division |
+
+  """
+
+  @typedoc """
+  A struct representing a parsed audio file.
+
+  ## Fields
+
+    * `:format` - The audio format as an atom (e.g., `:wav`, `:mp3`, `:flac`)
+    * `:sample_rate_hz` - The sample rate in Hz (e.g., 44100, 48000), if available
+    * `:num_audio_channels` - The number of audio channels (e.g., 1 for mono, 2 for stereo)
+    * `:nature` - Always `:audio` for audio files
+    * `:intrinsics` - A map containing format-specific metadata
+
   """
   @type t :: %Audio{
           format: atom() | nil,
@@ -27,18 +54,19 @@ defmodule FormatParser.Audio do
 
   - If given a tuple `{:error, file}` where `file` is a binary, attempts to parse the audio file.
   - If given a binary `file`, attempts to parse the audio file.
-  - For any other input, returns the input as-is.
+  - For any other input, returns the input as-is (passthrough for parser chain).
 
   ## Examples
 
-    iex> parse({:error, "audio.mp3"})
-    # parsed audio result
+      iex> {:ok, file} = File.read("priv/test.wav")
+      iex> result = FormatParser.Audio.parse(file)
+      iex> result.format
+      :wav
+      iex> result.sample_rate_hz
+      48000
 
-    iex> parse("audio.mp3")
-    # parsed audio result
-
-    iex> parse(:ok)
-    :ok
+      iex> FormatParser.Audio.parse(%FormatParser.Image{})
+      %FormatParser.Image{}
 
   """
   @spec parse({:error, binary()} | binary() | any()) :: any()

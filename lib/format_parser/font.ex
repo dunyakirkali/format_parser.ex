@@ -5,8 +5,34 @@ defmodule FormatParser.Font do
   A Font struct and functions.
 
   The Font struct contains the fields format and nature.
+
+  ## Supported Formats
+
+  | Format | Extension | Description |
+  |--------|-----------|-------------|
+  | `:ttf` | .ttf | TrueType Font |
+  | `:otf` | .otf | OpenType Font |
+  | `:fon` | .fon | Windows bitmap font |
+  | `:woff` | .woff | Web Open Font Format |
+  | `:woff2` | .woff2 | Web Open Font Format 2 |
+
+  ## Examples
+
+      iex> {:ok, file} = File.read("priv/test.ttf")
+      iex> FormatParser.parse(file)
+      %FormatParser.Font{format: :ttf, nature: :font}
+
   """
 
+  @typedoc """
+  A struct representing a parsed font file.
+
+  ## Fields
+
+    * `:format` - The font format as an atom (e.g., `:ttf`, `:otf`, `:woff`), or `nil` if unknown
+    * `:nature` - Always `:font` for font files
+
+  """
   @type t :: %Font{
           format: atom() | nil,
           nature: :font
@@ -19,18 +45,16 @@ defmodule FormatParser.Font do
 
   - If given a tuple `{:error, file}` where `file` is a binary, attempts to parse the font from the file.
   - If given a binary `file`, attempts to parse the font from the file.
-  - For any other input, returns the input as-is.
+  - For any other input, returns the input as-is (passthrough for parser chain).
 
   ## Examples
 
-    iex> parse({:error, "font.ttf"})
-    # Parses the font from "font.ttf"
+      iex> {:ok, file} = File.read("priv/test.ttf")
+      iex> FormatParser.Font.parse(file)
+      %FormatParser.Font{format: :ttf, nature: :font}
 
-    iex> parse("font.ttf")
-    # Parses the font from "font.ttf"
-
-    iex> parse(:ok)
-    :ok
+      iex> FormatParser.Font.parse(%FormatParser.Image{})
+      %FormatParser.Image{}
 
   """
   @spec parse({:error, binary()} | binary() | any()) :: any()

@@ -2,34 +2,75 @@ defmodule FormatParser.Data do
   alias __MODULE__
 
   @moduledoc """
-  A Data struct and functions.
+  A Data struct and functions for parsing data file formats.
 
-  The Data struct contains the fields format and nature.
+  The Data struct contains the fields format, nature, and intrinsics.
+
+  ## Supported Formats
+
+  | Format   | Extension | Description                    |
+  |----------|-----------|--------------------------------|
+  | `:pqt`   | .parquet  | Apache Parquet columnar format |
+  | `:sqlite3` | .db, .sqlite | SQLite 3 database         |
+  | `:duckdb` | .duckdb  | DuckDB database                |
+  | `:arrow` | .arrow    | Apache Arrow IPC file format   |
+  | `:feather` | .feather | Feather V1 format            |
+
+  ## Examples
+
+      iex> {:ok, file} = File.read("data.parquet")
+      iex> result = FormatParser.Data.parse(file)
+      %FormatParser.Data{format: :pqt, nature: :data, intrinsics: %{}}
+
+  """
+
+  @typedoc """
+  A struct representing a parsed data file.
+
+  ## Fields
+
+    * `:format` - The detected data format (e.g., `:pqt`, `:sqlite3`, `:duckdb`, `:arrow`, `:feather`)
+    * `:nature` - Always `:data` for data files
+    * `:intrinsics` - A map containing format-specific metadata
+
   """
   @type t :: %__MODULE__{
-          format: any(),
-          nature: atom(),
+          format: atom() | nil,
+          nature: :data,
           intrinsics: map()
         }
   defstruct [:format, nature: :data, intrinsics: %{}]
 
   @doc """
-  Parses the given input based on its type.
+  Parses binary data to detect data file formats.
 
-  - If the input is a tuple `{:error, file}` where `file` is a binary, it attempts to parse the file data.
-  - If the input is a binary, it parses the file data.
-  - For any other input, it returns the input as is.
+  This function attempts to identify data formats by examining magic bytes
+  at the beginning of the binary content.
+
+  ## Arguments
+
+    * `input` - Can be one of:
+      * `{:error, binary}` - A tuple containing binary file content (used in parser chain)
+      * `binary` - Raw binary file content
+      * `any` - Any other value is returned as-is (pass-through for parser chain)
+
+  ## Returns
+
+    * `%FormatParser.Data{}` - When a supported data format is detected
+    * `{:error, binary}` - When the format is not recognized (for parser chain)
+    * The input unchanged - When input is neither a binary nor an error tuple
 
   ## Examples
 
-    iex> parse({:error, "file.txt"})
-    # Parses the file data
+      iex> {:ok, file} = File.read("priv/test.parquet")
+      iex> FormatParser.Data.parse(file)
+      %FormatParser.Data{format: :pqt, nature: :data, intrinsics: %{}}
 
-    iex> parse("file.txt")
-    # Parses the file data
+      iex> FormatParser.Data.parse({:error, <<80, 65, 82, 49, 0>>})
+      %FormatParser.Data{format: :pqt, nature: :data, intrinsics: %{}}
 
-    iex> parse(:ok)
-    :ok
+      iex> FormatParser.Data.parse(%FormatParser.Image{})
+      %FormatParser.Image{}
 
   """
   @spec parse({:error, binary()} | binary() | any()) :: any()

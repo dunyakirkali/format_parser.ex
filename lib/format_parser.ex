@@ -2,10 +2,41 @@ defmodule FormatParser do
   alias FormatParser.{Archive, Audio, Data, Document, Font, Image, Video}
 
   @moduledoc """
-  The FormatParser Module
+  FormatParser - A file format detection library for Elixir.
 
-  FormatParser parses a binary file and extracts the format and some additional information from it.
-  It can deal with Audio, Video, Fonts, Images, Archives and Documents.
+  FormatParser parses binary file data and extracts the format and additional metadata from it.
+  It supports a wide variety of file types across multiple categories.
+
+  ## Supported Categories
+
+    * **Images** - PNG, JPEG, GIF, BMP, TIFF, PSD, WebP, HEIC, AVIF, SVG, ICO, and RAW formats (CR2, NEF)
+    * **Audio** - WAV, MP3, FLAC, AAC, Vorbis, Opus, AIFF, MIDI
+    * **Video** - MP4, AVI, MKV, WebM, MOV, WMV, FLV
+    * **Documents** - PDF, RTF, DOCX, XLSX, PPTX, ODT, ODS, ODP, EPUB
+    * **Fonts** - TTF, OTF, WOFF, WOFF2, FON
+    * **Archives** - ZIP, RAR, 7z, GZIP, BZIP2, XZ, TAR, ISO, ZSTD
+    * **Data** - Parquet, SQLite, DuckDB, Arrow, Feather
+
+  ## Basic Usage
+
+      {:ok, file} = File.read("image.png")
+      result = FormatParser.parse(file)
+      result.nature   #=> :image
+      result.format   #=> :png
+      result.width_px #=> 800
+
+  ## Return Types
+
+  The `parse/1` function returns a struct specific to the detected file type:
+
+    * `%FormatParser.Image{}` - For image files
+    * `%FormatParser.Audio{}` - For audio files
+    * `%FormatParser.Video{}` - For video files
+    * `%FormatParser.Document{}` - For document files
+    * `%FormatParser.Font{}` - For font files
+    * `%FormatParser.Archive{}` - For archive files
+    * `%FormatParser.Data{}` - For data files
+    * `{:error, "Unknown"}` - When the format is not recognized
 
   """
 
