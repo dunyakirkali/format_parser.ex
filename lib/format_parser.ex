@@ -9,6 +9,8 @@ defmodule FormatParser do
 
   """
 
+  @parsers [Font, Audio, Document, Video, Image, Data, Archive]
+
   @doc """
   Parses a file and extracts some information from it.
 
@@ -29,16 +31,15 @@ defmodule FormatParser do
       {:error, "Unknown"}
 
   """
-  @spec parse(binary) :: struct
+  @spec parse(binary) :: struct | {:error, String.t()}
   def parse(file) when is_binary(file) do
-    file
-    |> Font.parse()
-    |> Audio.parse()
-    |> Document.parse()
-    |> Video.parse()
-    |> Image.parse()
-    |> Data.parse()
-    |> Archive.parse()
+    @parsers
+    |> Enum.reduce_while({:error, file}, fn parser, {:error, f} ->
+      case parser.parse(f) do
+        {:error, _} = error -> {:cont, error}
+        result -> {:halt, result}
+      end
+    end)
     |> case do
       {:error, _} -> {:error, "Unknown"}
       result -> result
