@@ -92,4 +92,17 @@ defmodule FormatParser.AudioTest do
              mapping_family: 0
            }
   end
+
+  test "midi" do
+    {:ok, file} = File.read("priv/test.mid")
+
+    assert FormatParser.parse(file).format == :midi
+    assert FormatParser.parse(file).nature == :audio
+
+    assert FormatParser.parse(file).intrinsics == %{
+             format: 1,
+             num_tracks: 1,
+             time_division: 480
+           }
+  end
 end

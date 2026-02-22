@@ -62,6 +62,7 @@ defmodule FormatParser.Audio do
       <<"fLaC", x::binary>> -> parse_flac(x)
       <<"ID3", x::binary>> -> parse_mp3(x)
       <<0xFF, 0xF1, _::binary>> -> parse_aac(file)
+      <<"MThd", x::binary>> -> parse_midi(x)
       _ -> {:error, file}
     end
   end
@@ -161,5 +162,27 @@ defmodule FormatParser.Audio do
       num_audio_channels: channels,
       intrinsics: intrinsics
     }
+  end
+
+  # MIDI file format
+  # Header: MThd + length (4 bytes, always 6) + format (2 bytes) + num_tracks (2 bytes) + time_division (2 bytes)
+  defp parse_midi(<<
+         _length::big-integer-size(32),
+         format::big-integer-size(16),
+         num_tracks::big-integer-size(16),
+         time_division::big-integer-size(16),
+         _::binary
+       >>) do
+    intrinsics = %{
+      format: format,
+      num_tracks: num_tracks,
+      time_division: time_division
+    }
+
+    %Audio{format: :midi, intrinsics: intrinsics}
+  end
+
+  defp parse_midi(<<_::binary>>) do
+    %Audio{format: :midi}
   end
 end
