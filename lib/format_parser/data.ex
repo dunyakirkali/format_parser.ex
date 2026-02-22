@@ -50,6 +50,8 @@ defmodule FormatParser.Data do
       <<"PAR1", x::binary>> -> parse_pqt(x)
       <<"SQLite format 3", x::binary>> -> parse_sqlite3(x)
       <<_::binary-size(8), "DUCK", x::binary>> -> parse_duckdb(x)
+      <<"ARROW1", x::binary>> -> parse_arrow(x)
+      <<"FEA1", x::binary>> -> parse_feather_v1(x)
       _ -> {:error, file}
     end
   end
@@ -64,5 +66,17 @@ defmodule FormatParser.Data do
 
   defp parse_sqlite3(<<_x::binary>>) do
     %Data{format: :sqlite3}
+  end
+
+  # Apache Arrow IPC File Format (also used by Feather V2)
+  # Magic: "ARROW1" at start and end of file
+  defp parse_arrow(<<_x::binary>>) do
+    %Data{format: :arrow}
+  end
+
+  # Legacy Feather V1 format
+  # Magic: "FEA1" at start of file
+  defp parse_feather_v1(<<_x::binary>>) do
+    %Data{format: :feather}
   end
 end

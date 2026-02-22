@@ -74,6 +74,8 @@ match.format                      #=> :iso
 | pqt      | x      | x      |            |
 | sqlite3  | x      | x      |            |
 | duckdb   | x      | x      |            |
+| arrow    | x      | x      |            |
+| feather  | x      | x      |            |
 
 ### Audio
 

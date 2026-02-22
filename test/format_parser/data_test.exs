@@ -25,4 +25,18 @@ defmodule FormatParser.DataTest do
     assert FormatParser.parse(file).format == :duckdb
     assert FormatParser.parse(file).nature == :data
   end
+
+  test "arrow" do
+    {:ok, file} = File.read("priv/test.arrow")
+
+    assert FormatParser.parse(file).format == :arrow
+    assert FormatParser.parse(file).nature == :data
+  end
+
+  test "feather v1" do
+    {:ok, file} = File.read("priv/test_v1.feather")
+
+    assert FormatParser.parse(file).format == :feather
+    assert FormatParser.parse(file).nature == :data
+  end
 end
