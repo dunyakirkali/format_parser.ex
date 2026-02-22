@@ -266,8 +266,68 @@ defmodule FormatParser.Image do
     %Image{format: :gif, width_px: width, height_px: height}
   end
 
-  defp parse_jpeg(<<_::binary>>) do
-    %Image{format: :jpg}
+  defp parse_jpeg(data) do
+    case find_jpeg_dimensions(data) do
+      {width, height} ->
+        %Image{format: :jpg, width_px: width, height_px: height}
+
+      nil ->
+        %Image{format: :jpg}
+    end
+  end
+
+  # JPEG SOF markers that contain image dimensions
+  # SOF0 (0xC0) - Baseline DCT
+  # SOF1 (0xC1) - Extended sequential DCT
+  # SOF2 (0xC2) - Progressive DCT
+  # SOF3 (0xC3) - Lossless (sequential)
+  # SOF5 (0xC5) - Differential sequential DCT
+  # SOF6 (0xC6) - Differential progressive DCT
+  # SOF7 (0xC7) - Differential lossless (sequential)
+  # SOF9 (0xC9) - Extended sequential DCT, arithmetic coding
+  # SOF10 (0xCA) - Progressive DCT, arithmetic coding
+  # SOF11 (0xCB) - Lossless (sequential), arithmetic coding
+  # SOF13 (0xCD) - Differential sequential DCT, arithmetic coding
+  # SOF14 (0xCE) - Differential progressive DCT, arithmetic coding
+  # SOF15 (0xCF) - Differential lossless, arithmetic coding
+  @sof_markers [0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF]
+
+  defp find_jpeg_dimensions(<<>>) do
+    nil
+  end
+
+  defp find_jpeg_dimensions(<<0xFF, marker, _length::size(16), _precision::size(8),
+                              height::size(16), width::size(16), _rest::binary>>)
+       when marker in @sof_markers do
+    {width, height}
+  end
+
+  defp find_jpeg_dimensions(<<0xFF, marker, length::size(16), rest::binary>>)
+       when marker != 0x00 and marker != 0xFF do
+    # Skip this segment (length includes the 2 bytes for length itself)
+    skip_bytes = length - 2
+
+    case rest do
+      <<_skipped::binary-size(skip_bytes), remaining::binary>> ->
+        find_jpeg_dimensions(remaining)
+
+      _ ->
+        nil
+    end
+  end
+
+  defp find_jpeg_dimensions(<<0xFF, 0xFF, rest::binary>>) do
+    # Multiple 0xFF bytes (padding), keep looking
+    find_jpeg_dimensions(<<0xFF, rest::binary>>)
+  end
+
+  defp find_jpeg_dimensions(<<0xFF, 0x00, rest::binary>>) do
+    # Stuffed byte, skip it
+    find_jpeg_dimensions(rest)
+  end
+
+  defp find_jpeg_dimensions(<<_, rest::binary>>) do
+    find_jpeg_dimensions(rest)
   end
 
   defp parse_bmp(

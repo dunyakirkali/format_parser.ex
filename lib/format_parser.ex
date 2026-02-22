@@ -22,7 +22,7 @@ defmodule FormatParser do
 
       iex> {:ok, file} = File.read("priv/test.jpg")
       iex> FormatParser.parse(file)
-      %FormatParser.Image{format: :jpg, height_px: nil, nature: :image, width_px: nil}
+      %FormatParser.Image{format: :jpg, height_px: 234, nature: :image, width_px: 313}
 
       iex> {:ok, file} = File.read("priv/test.html")
       iex> FormatParser.parse(file)
