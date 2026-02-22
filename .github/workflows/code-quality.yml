@@ -3,7 +3,7 @@ name: Code Quality
 on:
   push:
   schedule:
-    - cron: "* 1 * * *"
+    - cron: "0 1 * * *"
 
 jobs:
   code-quality:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4.2.2
       - uses: erlef/setup-beam@v1.18.2
         with:
-          otp-version: '26.2.5.9'
-          elixir-version: '1.18.3'
+          otp-version: "26.2.5.9"
+          elixir-version: "1.18.3"
       - run: mix deps.get
       - run: mix code_quality
