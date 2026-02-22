@@ -50,7 +50,7 @@ defmodule FormatParser.Document do
     case file do
       <<0x7B, 0x5C, 0x72, 0x74, 0x66, 0x31, x::binary>> -> parse_rtf(x)
       <<"%PDF", x::binary>> -> parse_pdf(x)
-      <<"PK", 0x03, 0x04, rest::binary>> -> parse_zip_file(rest, file)
+      <<"PK", 0x03, 0x04, _rest::binary>> -> parse_zip_based_format(file)
       <<0xD0, 0xCF, 0x11, 0xE0, _::binary>> -> parse_doc(file)
       _ -> {:error, file}
     end
@@ -70,18 +70,65 @@ defmodule FormatParser.Document do
     %Document{format: :pdf, intrinsics: %{page_count: page_count}}
   end
 
-  defp parse_docx(<<_::binary>>) do
-    %Document{format: :docx}
-  end
-
   defp parse_doc(<<_::binary>>) do
     %Document{format: :doc}
   end
 
-  defp parse_odt(<<_::binary>>) do
-    %Document{format: :odt}
+  # ZIP-based format detection
+  # Searches for characteristic filenames within the ZIP archive
+  defp parse_zip_based_format(file) do
+    cond do
+      # Microsoft Office Open XML formats
+      contains_zip_entry?(file, "word/") ->
+        %Document{format: :docx}
+
+      contains_zip_entry?(file, "xl/") ->
+        %Document{format: :xlsx}
+
+      contains_zip_entry?(file, "ppt/") ->
+        %Document{format: :pptx}
+
+      # OpenDocument formats - check mimetype content
+      is_odt?(file) ->
+        %Document{format: :odt}
+
+      is_ods?(file) ->
+        %Document{format: :ods}
+
+      is_odp?(file) ->
+        %Document{format: :odp}
+
+      # Generic OpenDocument (has mimetype but we couldn't identify specific type)
+      contains_zip_entry?(file, "mimetype") and contains_zip_entry?(file, "content.xml") ->
+        %Document{format: :odf}
+
+      # Not a document format - let other parsers handle it
+      true ->
+        {:error, file}
+    end
   end
 
-  defp parse_zip_file(<<_::binary-size(300), "word/", _::binary>>, file), do: parse_docx(file)
-  defp parse_zip_file(_, file), do: parse_odt(file)
+  # Check if the ZIP file contains a specific entry/path
+  # This searches for the filename in the ZIP central directory or local file headers
+  defp contains_zip_entry?(file, entry_name) do
+    String.contains?(file, entry_name)
+  end
+
+  # OpenDocument Text - mimetype contains "application/vnd.oasis.opendocument.text"
+  defp is_odt?(file) do
+    contains_zip_entry?(file, "mimetype") and
+      String.contains?(file, "application/vnd.oasis.opendocument.text")
+  end
+
+  # OpenDocument Spreadsheet - mimetype contains "application/vnd.oasis.opendocument.spreadsheet"
+  defp is_ods?(file) do
+    contains_zip_entry?(file, "mimetype") and
+      String.contains?(file, "application/vnd.oasis.opendocument.spreadsheet")
+  end
+
+  # OpenDocument Presentation - mimetype contains "application/vnd.oasis.opendocument.presentation"
+  defp is_odp?(file) do
+    contains_zip_entry?(file, "mimetype") and
+      String.contains?(file, "application/vnd.oasis.opendocument.presentation")
+  end
 end

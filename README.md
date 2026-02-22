@@ -106,7 +106,11 @@ match.format                      #=> :iso
 | pdf  | x      | x      | page_count |
 | docx | x      | x      |            |
 | doc  | x      | x      |            |
+| xlsx | x      | x      |            |
+| pptx | x      | x      |            |
 | odt  | x      | x      |            |
+| ods  | x      | x      |            |
+| odp  | x      | x      |            |
 
 ### Image
 
@@ -141,6 +145,13 @@ match.format                      #=> :iso
 
 | Type | Nature | Format |
 | :--: | :----: | :----: |
+| zip  | x      | x      |
+| rar  | x      | x      |
+| 7z   | x      | x      |
+| gz   | x      | x      |
+| bz2  | x      | x      |
+| xz   | x      | x      |
+| tar  | x      | x      |
 | iso  | x      | x      |
 
 ## Installation
