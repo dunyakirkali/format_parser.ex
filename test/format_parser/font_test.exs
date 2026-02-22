@@ -37,4 +37,18 @@ defmodule FormatParser.FontTest do
     assert FormatParser.parse(file).format == :fon
     assert FormatParser.parse(file).nature == :font
   end
+
+  test "woff" do
+    {:ok, file} = File.read("priv/test.woff")
+
+    assert FormatParser.parse(file).format == :woff
+    assert FormatParser.parse(file).nature == :font
+  end
+
+  test "woff2" do
+    {:ok, file} = File.read("priv/test.woff2")
+
+    assert FormatParser.parse(file).format == :woff2
+    assert FormatParser.parse(file).nature == :font
+  end
 end

@@ -135,11 +135,13 @@ match.format                      #=> :iso
 
 ### Font
 
-| Type | Nature | Format |
-| :--: | :----: | :----: |
-| ttf  | x      | x      |
-| otf  | x      | x      |
-| fon  | x      | x      |
+| Type  | Nature | Format |
+| :---: | :----: | :----: |
+| ttf   | x      | x      |
+| otf   | x      | x      |
+| fon   | x      | x      |
+| woff  | x      | x      |
+| woff2 | x      | x      |
 
 ### Archive
 

@@ -51,6 +51,8 @@ defmodule FormatParser.Font do
       <<0x4D, 0x5A, x::binary>> -> parse_fon(x)
       <<0x00, 0x01, 0x00, 0x00, 0x00, x::binary>> -> parse_ttf(x)
       <<"OTTO", 0x00, x::binary>> -> parse_otf(x)
+      <<"wOFF", x::binary>> -> parse_woff(x)
+      <<"wOF2", x::binary>> -> parse_woff2(x)
       _ -> {:error, file}
     end
   end
@@ -65,5 +67,13 @@ defmodule FormatParser.Font do
 
   defp parse_fon(<<_::binary>>) do
     %Font{format: :fon}
+  end
+
+  defp parse_woff(<<_::binary>>) do
+    %Font{format: :woff}
+  end
+
+  defp parse_woff2(<<_::binary>>) do
+    %Font{format: :woff2}
   end
 end
