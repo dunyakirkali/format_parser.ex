@@ -55,4 +55,11 @@ defmodule FormatParser.DocumentTest do
     assert FormatParser.parse(file).format == :odt
     assert FormatParser.parse(file).nature == :document
   end
+
+  test "epub" do
+    {:ok, file} = File.read("priv/test.epub")
+
+    assert FormatParser.parse(file).format == :epub
+    assert FormatParser.parse(file).nature == :document
+  end
 end

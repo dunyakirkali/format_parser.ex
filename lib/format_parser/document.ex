@@ -78,6 +78,10 @@ defmodule FormatParser.Document do
   # Searches for characteristic filenames within the ZIP archive
   defp parse_zip_based_format(file) do
     cond do
+      # EPUB format - check mimetype content
+      is_epub?(file) ->
+        %Document{format: :epub}
+
       # Microsoft Office Open XML formats
       contains_zip_entry?(file, "word/") ->
         %Document{format: :docx}
@@ -130,5 +134,11 @@ defmodule FormatParser.Document do
   defp is_odp?(file) do
     contains_zip_entry?(file, "mimetype") and
       String.contains?(file, "application/vnd.oasis.opendocument.presentation")
+  end
+
+  # EPUB - mimetype contains "application/epub+zip"
+  defp is_epub?(file) do
+    contains_zip_entry?(file, "mimetype") and
+      String.contains?(file, "application/epub+zip")
   end
 end

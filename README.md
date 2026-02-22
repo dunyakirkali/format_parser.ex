@@ -111,6 +111,7 @@ match.format                      #=> :iso
 | odt  | x      | x      |            |
 | ods  | x      | x      |            |
 | odp  | x      | x      |            |
+| epub | x      | x      |            |
 
 ### Image
 
