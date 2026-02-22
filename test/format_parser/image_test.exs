@@ -210,4 +210,11 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).format == :svg
     assert FormatParser.parse(file).nature == :image
   end
+
+  test "avif" do
+    {:ok, file} = File.read("priv/test.avif")
+
+    assert FormatParser.parse(file).format == :avif
+    assert FormatParser.parse(file).nature == :image
+  end
 end
