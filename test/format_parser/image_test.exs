@@ -38,6 +38,8 @@ defmodule FormatParser.ImageTest do
 
     assert FormatParser.parse(file).format == :xcf
     assert FormatParser.parse(file).nature == :image
+    assert FormatParser.parse(file).width_px == 640
+    assert FormatParser.parse(file).height_px == 400
   end
 
   test "exr" do

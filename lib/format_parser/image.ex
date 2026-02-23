@@ -25,7 +25,7 @@ defmodule FormatParser.Image do
   | `:avif` | .avif | - | - |
   | `:svg` | .svg | - | - |
   | `:jb2` | .jb2 | - | - |
-  | `:xcf` | .xcf | - | - |
+  | `:xcf` | .xcf | ✓ | - |
   | `:exr` | .exr | - | - |
 
   """
@@ -113,8 +113,11 @@ defmodule FormatParser.Image do
     %Image{format: :exr}
   end
 
-  defp parse_xcf(<<_::binary>>) do
-    %Image{format: :xcf}
+  defp parse_xcf(
+         <<_version::binary-size(6), width::big-integer-size(32), height::big-integer-size(32),
+           _::binary>>
+       ) do
+    %Image{format: :xcf, width_px: width, height_px: height}
   end
 
   defp parse_jb2(<<_::binary>>) do
