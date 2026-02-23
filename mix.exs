@@ -47,7 +47,7 @@ defmodule FormatParser.Mixfile do
   # Package description
   defp description do
     """
-    The owls are not what they seem
+    File format detection and metadata extraction for Elixir.
     """
   end
 
