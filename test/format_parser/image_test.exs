@@ -102,8 +102,15 @@ defmodule FormatParser.ImageTest do
 
     assert FormatParser.parse(file).format == :nef
     assert FormatParser.parse(file).nature == :image
-    # assert FormatParser.parse(file).width_px == 212
-    # assert FormatParser.parse(file).height_px == 320
+    assert FormatParser.parse(file).width_px == 160
+    assert FormatParser.parse(file).height_px == 120
+
+    assert FormatParser.parse(file).intrinsics == %{
+             preview_offset: 135_982,
+             preview_byte_count: 57_600,
+             model: "NIKON D40" <> <<0>>,
+             date_time: "2007:04:01 17:02:53" <> <<0>>
+           }
   end
 
   test "ico" do
