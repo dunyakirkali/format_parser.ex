@@ -334,8 +334,10 @@ defmodule FormatParser.Image do
     nil
   end
 
-  defp find_jpeg_dimensions(<<0xFF, marker, _length::size(16), _precision::size(8),
-                              height::size(16), width::size(16), _rest::binary>>)
+  defp find_jpeg_dimensions(
+         <<0xFF, marker, _length::size(16), _precision::size(8), height::size(16),
+           width::size(16), _rest::binary>>
+       )
        when marker in @sof_markers do
     {width, height}
   end
