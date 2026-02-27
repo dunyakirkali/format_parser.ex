@@ -17,6 +17,7 @@ defmodule FormatParser.Audio do
   | `:flac`   | ✓           | ✓        | |
   | `:mp3`    |             |          | |
   | `:aac`    |             |          | |
+  | `:m4a`    |             |          | |
   | `:midi`   |             |          | format, num_tracks, time_division |
 
   """
@@ -89,6 +90,7 @@ defmodule FormatParser.Audio do
       <<"FORM", 0x00, x::binary>> -> parse_aiff(x)
       <<"fLaC", x::binary>> -> parse_flac(x)
       <<"ID3", x::binary>> -> parse_mp3(x)
+      <<_::binary-size(4), "ftypM4A ", _::binary>> -> parse_m4a(file)
       <<0xFF, 0xF1, _::binary>> -> parse_aac(file)
       <<"MThd", x::binary>> -> parse_midi(x)
       _ -> {:error, file}
@@ -166,6 +168,10 @@ defmodule FormatParser.Audio do
 
   defp parse_aac(<<_::binary>>) do
     %Audio{format: :aac}
+  end
+
+  defp parse_m4a(<<_::binary>>) do
+    %Audio{format: :m4a}
   end
 
   defp parse_opus(<<
