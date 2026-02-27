@@ -23,6 +23,7 @@ defmodule FormatParser.Image do
   | `:webp` | .webp | - | - |
   | `:heic` | .heic | - | - |
   | `:avif` | .avif | - | - |
+  | `:jxl` | .jxl | - | - |
   | `:svg` | .svg | - | - |
   | `:jb2` | .jb2 | - | - |
   | `:xcf` | .xcf | ✓ | - |
@@ -104,6 +105,8 @@ defmodule FormatParser.Image do
       <<_::binary-size(4), "ftypheic", x::binary>> -> parse_heic(x)
       <<_::binary-size(4), "ftypavif", x::binary>> -> parse_avif(x)
       <<_::binary-size(4), "ftypavis", x::binary>> -> parse_avif(x)
+      <<_::binary-size(4), "JXL ", 0x0D, 0x0A, 0x87, 0x0A, _::binary>> -> parse_jxl(file)
+      <<0xFF, 0x0A, _::binary>> -> parse_jxl(file)
       <<"<svg", _::binary>> -> parse_svg(file)
       _ -> {:error, file}
     end
@@ -130,6 +133,10 @@ defmodule FormatParser.Image do
 
   defp parse_psd(<<_::size(80), height::size(32), width::size(32), _::binary>>) do
     %Image{format: :psd, width_px: width, height_px: height}
+  end
+
+  defp parse_jxl(<<_::binary>>) do
+    %Image{format: :jxl}
   end
 
   defp parse_ico(

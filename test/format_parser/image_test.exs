@@ -226,4 +226,18 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).format == :avif
     assert FormatParser.parse(file).nature == :image
   end
+
+  test "jxl codestream" do
+    {:ok, file} = File.read("priv/test.jxl")
+
+    assert FormatParser.parse(file).format == :jxl
+    assert FormatParser.parse(file).nature == :image
+  end
+
+  test "jxl container" do
+    {:ok, file} = File.read("priv/test_container.jxl")
+
+    assert FormatParser.parse(file).format == :jxl
+    assert FormatParser.parse(file).nature == :image
+  end
 end
