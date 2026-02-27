@@ -86,6 +86,7 @@ match.format                      #=> :iso
 | vorbis | x      | x      | x           | x             | vorbis_version                                 |
 | opus   | x      | x      | x           | x             | version, pre_skip, output_gain, mapping_family |
 | flac   | x      | x      | x           | x             |                                                |
+| oggflac | x     | x      |             |               |                                                |
 | aac    | x      | x      | x           | x             |                                                |
 | m4a    | x      | x      |             |               |                                                |
 | midi   | x      | x      |             |               | format, num_tracks, time_division              |

@@ -84,6 +84,13 @@ defmodule FormatParser.AudioTest do
     assert FormatParser.parse(file).nature == :audio
   end
 
+  test "ogg flac" do
+    {:ok, file} = File.read("priv/test.oggflac")
+
+    assert FormatParser.parse(file).format == :oggflac
+    assert FormatParser.parse(file).nature == :audio
+  end
+
   test "opus" do
     {:ok, file} = File.read("priv/test.opus")
 

@@ -15,6 +15,7 @@ defmodule FormatParser.Audio do
   | `:vorbis` | ✓           | ✓        | vorbis_version |
   | `:opus`   | ✓           | ✓        | version, pre_skip, output_gain, mapping_family |
   | `:flac`   | ✓           | ✓        | |
+  | `:oggflac` |            |          | |
   | `:mp3`    |             |          | |
   | `:aac`    |             |          | |
   | `:m4a`    |             |          | |
@@ -112,6 +113,10 @@ defmodule FormatParser.Audio do
     }
   end
 
+  defp parse_ogg(<<_::binary-size(29), "fLaC", x::binary>>) do
+    parse_ogg_flac(x)
+  end
+
   defp parse_ogg(<<_::binary-size(29), "vorbis", x::binary>>) do
     parse_vorbis(x)
   end
@@ -168,6 +173,10 @@ defmodule FormatParser.Audio do
 
   defp parse_aac(<<_::binary>>) do
     %Audio{format: :aac}
+  end
+
+  defp parse_ogg_flac(<<_::binary>>) do
+    %Audio{format: :oggflac}
   end
 
   defp parse_m4a(<<_::binary>>) do
