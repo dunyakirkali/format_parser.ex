@@ -22,6 +22,7 @@ defmodule FormatParser.Image do
   | `:nef` | .nef | ✓ | date_time, model, preview_byte_count, preview_offset |
   | `:webp` | .webp | - | - |
   | `:heic` | .heic | - | - |
+  | `:heif` | .heif | - | - |
   | `:avif` | .avif | - | - |
   | `:jxl` | .jxl | - | - |
   | `:svg` | .svg | - | - |
@@ -102,9 +103,16 @@ defmodule FormatParser.Image do
       <<"gimp xcf", x::binary>> -> parse_xcf(x)
       <<0x76, 0x2F, 0x31, 0x01, x::binary>> -> parse_exr(x)
       <<"RIFF", _::binary-size(4), "WEBP", x::binary>> -> parse_webp(x)
-      <<_::binary-size(4), "ftypheic", x::binary>> -> parse_heic(x)
-      <<_::binary-size(4), "ftypavif", x::binary>> -> parse_avif(x)
-      <<_::binary-size(4), "ftypavis", x::binary>> -> parse_avif(x)
+      <<_::binary-size(4), "ftypheic", _::binary>> -> parse_heic(file)
+      <<_::binary-size(4), "ftypheix", _::binary>> -> parse_heic(file)
+      <<_::binary-size(4), "ftypheim", _::binary>> -> parse_heic(file)
+      <<_::binary-size(4), "ftypheis", _::binary>> -> parse_heic(file)
+      <<_::binary-size(4), "ftyphevc", _::binary>> -> parse_heic(file)
+      <<_::binary-size(4), "ftyphevx", _::binary>> -> parse_heic(file)
+      <<_::binary-size(4), "ftypmif1", _::binary>> -> parse_heif(file)
+      <<_::binary-size(4), "ftypmsf1", _::binary>> -> parse_heif(file)
+      <<_::binary-size(4), "ftypavif", _::binary>> -> parse_avif(file)
+      <<_::binary-size(4), "ftypavis", _::binary>> -> parse_avif(file)
       <<_::binary-size(4), "JXL ", 0x0D, 0x0A, 0x87, 0x0A, _::binary>> -> parse_jxl(file)
       <<0xFF, 0x0A, _::binary>> -> parse_jxl(file)
       <<"<svg", _::binary>> -> parse_svg(file)
@@ -436,6 +444,10 @@ defmodule FormatParser.Image do
 
   defp parse_heic(<<_::binary>>) do
     %Image{format: :heic}
+  end
+
+  defp parse_heif(<<_::binary>>) do
+    %Image{format: :heif}
   end
 
   defp parse_avif(<<_::binary>>) do

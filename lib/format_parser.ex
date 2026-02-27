@@ -9,7 +9,7 @@ defmodule FormatParser do
 
   ## Supported Categories
 
-    * **Images** - PNG, JPEG, GIF, BMP, TIFF, PSD, WebP, HEIC, AVIF, JXL, SVG, ICO, and RAW formats (CR2, NEF)
+    * **Images** - PNG, JPEG, GIF, BMP, TIFF, PSD, WebP, HEIC, HEIF, AVIF, JXL, SVG, ICO, and RAW formats (CR2, NEF)
     * **Audio** - WAV, MP3, FLAC, AAC, Vorbis, Opus, AIFF, MIDI
     * **Video** - MP4, AVI, MKV, WebM, MOV, WMV, FLV
     * **Documents** - PDF, RTF, DOCX, XLSX, PPTX, ODT, ODS, ODP, EPUB

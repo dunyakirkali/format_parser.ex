@@ -135,6 +135,7 @@ match.format                      #=> :iso
 | exr  | x      | x      |       |        |                                                                                 |
 | webp | x      | x      |       |        |                                                                                 |
 | heic | x      | x      |       |        |                                                                                 |
+| heif | x      | x      |       |        |                                                                                 |
 | avif | x      | x      |       |        |                                                                                 |
 | jxl  | x      | x      |       |        |                                                                                 |
 | svg  | x      | x      |       |        |                                                                                 |

@@ -240,4 +240,11 @@ defmodule FormatParser.ImageTest do
     assert FormatParser.parse(file).format == :jxl
     assert FormatParser.parse(file).nature == :image
   end
+
+  test "heif" do
+    {:ok, file} = File.read("priv/test.heif")
+
+    assert FormatParser.parse(file).format == :heif
+    assert FormatParser.parse(file).nature == :image
+  end
 end
